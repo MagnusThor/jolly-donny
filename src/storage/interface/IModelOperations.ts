@@ -71,4 +71,14 @@ export interface IModelOperations<T extends EntityBase> {
      * @returns A promise that resolves to a `QueryableArray` of all items.
      */
     toArray: () => Promise<QueryableArray<T>>;
+
+
+    /**
+     * Updates all items in the storage that match the given predicate.
+     * @param predicate A function to test each element for a condition.
+     * @param update A function to update the matching elements.
+     * @returns A promise that resolves when all matching items have been updated.
+     */
+    updateAll: (predicate: (item: T) => boolean, update: (item: T) => void) => Promise<void>;
+
 }

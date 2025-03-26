@@ -124,6 +124,9 @@ export class OfflineStorage {
             toArray: async () => {
                 return await this.all({ label });
             },
+            updateAll: async (predicate: (item: T) => boolean, update: (item: T) => void) => {
+                await this.updateAll(label, predicate, update);
+            },
         };
     }
 
@@ -186,6 +189,27 @@ export class OfflineStorage {
     async update<T extends EntityBase>(label: string, item: T): Promise<void> {
         await this.provider.update(label, item);
         if (this.onChange) this.onChange({ label, origin: 'update', item });
+    }
+
+    /**
+     * Updates all items of a specific type in the storage that match a given predicate.
+     *
+     * @template T - The type of the entities being updated, extending `EntityBase`.
+     * @param label - A string label used to identify the collection of items.
+     * @param predicate - A function that determines whether an item should be updated.
+     *                     It receives an item of type `T` and returns a boolean.
+     * @param update - A function that performs the update on an item of type `T`.
+     *                 It modifies the item in place.
+     * @returns A promise that resolves when all matching items have been updated.
+     */
+    async updateAll<T extends EntityBase>(label: string, predicate: (item: T) => boolean, update: (item: T) => void): Promise<void> {
+        const items = await this.all<T>({ label });
+        for (const item of items) {
+            if (predicate(item)) {
+                update(item);
+                await this.update(label, item);
+            }
+        }
     }
 
     /**
