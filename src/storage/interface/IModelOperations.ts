@@ -1,4 +1,4 @@
-import { EntityBase } from '../EntityBase';
+import { EntityBase } from '../entity/EntityBase';
 import { QueryableArray } from '../QueryableArray';
 
 /**
@@ -53,9 +53,9 @@ export interface IModelOperations<T extends EntityBase> {
     /**
      * Retrieves all items in the model.
      * 
-     * @returns A promise that resolves to a `QueryableArray` of all items.
+     * @returns A promise that resolves to a `T[]` of all items.
      */
-    all: () => Promise<QueryableArray<T>>;
+    all: () => Promise<T[]>;
 
     /**
      * Retrieves an item from the model by its index.
@@ -68,7 +68,31 @@ export interface IModelOperations<T extends EntityBase> {
     /**
      * Converts the model's items into an array.
      * 
-     * @returns A promise that resolves to a `QueryableArray` of all items.
+     * @returns A promise that resolves to a `QueryableArray<T>` of all items.
      */
     toArray: () => Promise<QueryableArray<T>>;
+
+    /**
+     * Converts the model's items into an array.
+     * 
+     * @returns A promise that resolves to a `Array` of all items.
+     */
+
+    /**
+     * Updates all items in the storage that match the given predicate.
+     * @param predicate A function to test each element for a condition.
+     * @param update A function to update the matching elements.
+     * @returns A promise that resolves when all matching items have been updated.
+     */
+    updateAll: (predicate: (item: T) => boolean, update: (item: T) => void) => Promise<void>;
+
+
+    /**
+     * Deletes multiple items by predicate or array.
+     * @param predicateOrItems Predicate or items to delete.
+     * @returns Promise resolving on completion.
+     */
+    deleteMany: (predicateOrItems: ((item: T) => boolean) | T[]) => Promise<void>;
+
+
 }

@@ -1,4 +1,4 @@
-import { EntityBase } from '../EntityBase';
+import { EntityBase } from '../entity/EntityBase';
 import { IOfflineStorageProvider } from '../interface/IOfflineStorageProvider';
 
 export class LocalStorageProvider implements IOfflineStorageProvider {
@@ -89,6 +89,11 @@ export class LocalStorageProvider implements IOfflineStorageProvider {
 
     async getModels(): Promise<Map<string, any>> {
         return Promise.resolve(this.models);
+    }
+
+
+    addModel<T extends EntityBase>(label: string, model: any): void {
+        this.models.set(label, model);
     }
 
     private serialize(): string {

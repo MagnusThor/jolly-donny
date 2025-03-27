@@ -1,4 +1,4 @@
-import { EntityBase } from '../EntityBase';
+import { EntityBase } from '../entity/EntityBase';
 import { IOfflineStorageProvider } from '../interface/IOfflineStorageProvider';
 
 export class IndexedDBProvider implements IOfflineStorageProvider {
@@ -8,6 +8,9 @@ export class IndexedDBProvider implements IOfflineStorageProvider {
 
     constructor(version: number = 1) {
         this.version = version;
+    }
+    addModel<T extends EntityBase>(label: string, model: any): void {
+        throw new Error('No need to add models to IndexedDB provider');
     }
 
     async init(storageName: string): Promise<void> {
@@ -63,7 +66,15 @@ export class IndexedDBProvider implements IOfflineStorageProvider {
 
     async findById<T extends EntityBase>(label: string, uuid: string): Promise<T | undefined> {
         const store = await this.getObjectStore('readonly');
-        return store.get(uuid) as unknown as Promise<T | undefined>;
+        return new Promise<T | undefined>((resolve, reject) => {
+            const request = store.get(uuid);
+            request.onsuccess = () => {
+                resolve(request.result as T | undefined);
+            };
+            request.onerror = () => {
+                reject(request.error);
+            };
+        });
     }
 
     async find<T extends EntityBase, K extends keyof T = keyof T>(

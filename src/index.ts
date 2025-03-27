@@ -5,7 +5,9 @@ export * from './storage/interface/IOfflineGraph'
 export * from './storage/interface/IOfflineStorageProvider'
 export * from './storage/providers/IndexDBProvider'
 export * from './storage/providers/LocalStorageProvider'
-export * from './storage/EntityBase'
+export * from './storage/entity/EntityBase'
 export * from './storage/QueryableArray'
 export * from './storage/OfflineStorage'
-
+export * from '../src/storage/entity/OfflineEntity';
+export * from '../src/storage/interface/IFormatter';
+export * from '../src/storage/formaters/DefaultFormatter';  
