@@ -1,14 +1,12 @@
+This library provides a robust and flexible offline storage solution for JavaScript applications. It abstracts away the complexities of different storage mechanisms (like LocalStorage and IndexedDB), allowing developers to interact with data models in a consistent and intuitive way. Key features include:
 
+* **Model-Based Data Management:** Define your data models as classes, enabling strong typing and object-oriented programming.
+* **Customizable Data Formatting:** Use formatters to transform data during storage and retrieval, handling data type conversions and transformations seamlessly.
+* **Abstraction of Storage Providers:** Easily switch between different storage providers (LocalStorage, IndexedDB, etc.) without modifying your data model or application logic.
+* **Queryable Data Collections:** Use a `QueryableArray` to perform advanced queries and manipulations on your data collections.
+* **Efficient Data Synchronization:** Provides tools and patterns to keep local data in sync with remote servers.
+* **Error Handling and Robustness:** Includes comprehensive error handling and logging to ensure data integrity and application stability.
 
-jolly-donny  is a TypeScript library that provides a flexible and powerful way to manage data in offline environments. It supports multiple storage providers (e.g., LocalStorage, IndexedDB) and offers a LINQ-like query API for data manipulation.
-
-## Features
-
--   **Multiple Storage Providers:** Supports LocalStorage and IndexedDB, with the ability to extend to other storage solutions.
--   **LINQ-like Query API:** Provides a rich set of query methods for filtering, sorting, and transforming data.
--   **Asynchronous Operations:** All storage and query operations are asynchronous, ensuring non-blocking execution.
--   **Change Tracking:** Notifies subscribers of data changes (insert, update, delete, save).
--   **Custom QueryableArray:** Provides a chainable and powerful array-like structure for data manipulation.
 
 ## Installation
 

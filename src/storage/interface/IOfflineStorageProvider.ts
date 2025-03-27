@@ -1,4 +1,4 @@
-import { EntityBase } from '../EntityBase';
+import { EntityBase } from '../entity/EntityBase';
 
 /**
  * Interface representing an offline storage provider.
@@ -69,4 +69,7 @@ export interface IOfflineStorageProvider {
      * @returns A promise that resolves with a map where keys are model names and values are their corresponding data.
      */
     getModels(): Promise<Map<string, any>>;
+
+
+    addModel<T extends EntityBase>(label: string, model: any): void; // Add addModel
 }

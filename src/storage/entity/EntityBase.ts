@@ -1,4 +1,4 @@
-import { IOfflineEntity } from './interface/IOfflineEntity';
+import { IOfflineEntity } from '../interface/IOfflineEntity';
 
 /**
  * Represents the base class for entities, providing common properties and functionality

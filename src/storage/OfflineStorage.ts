@@ -1,4 +1,4 @@
-import { EntityBase } from './EntityBase';
+import { EntityBase } from './entity/EntityBase';
 import { IModelOperations } from './interface/IModelOperations';
 import { IOfflineGraph } from './interface/IOfflineGraph';
 import { IOfflineStorageProvider } from './interface/IOfflineStorageProvider';
@@ -93,6 +93,15 @@ export class OfflineStorage {
     }
 
 
+    private parseItem<T extends EntityBase>(label: string, item: any): T {
+        if (item && typeof (item) === 'object' && 'fromJSON' in item) {
+            const temp = new (item.constructor)();
+            temp.fromJSON(item);
+            return temp;
+        }
+        return item as T;
+    }
+
     /**
      * Retrieves a set of model operations for a specific entity type.
      * 
@@ -116,17 +125,20 @@ export class OfflineStorage {
             delete: (item: T) => this.delete(label, item),
             findById: (uuid: string) => this.findById(label, uuid),
             find: <K extends keyof T = keyof T>(query: (item: T) => boolean, pickKeys?: K[]) => this.find(label, query, pickKeys),
-            all: () => this.all({ label }),
+            all: () => this.all( label ),
             get: async (index: number) => {
-                const allItems = await this.all({ label });
+                const allItems = await this.all(label );
                 return allItems[index] as T;
             },
             toArray: async () => {
-                return await this.all({ label });
+                return await this.all( label );
             },
             updateAll: async (predicate: (item: T) => boolean, update: (item: T) => void) => {
                 await this.updateAll(label, predicate, update);
             },
+            deleteMany: async (predicateOrItems: ((item: T) => boolean) | T[]) => {
+                await this.deleteMany(label, predicateOrItems);
+            }, 
         };
     }
 
@@ -140,8 +152,8 @@ export class OfflineStorage {
      */
     async addModel<T extends EntityBase>(label: string): Promise<IOfflineGraph<T>> {
         const newModel: IOfflineGraph<T> = { label: label, collection: [] };
-        const models = await this.provider.getModels();
-        models.set(label, newModel);
+        this.provider.addModel(label, newModel);
+    
         return newModel;
     }
 
@@ -203,7 +215,7 @@ export class OfflineStorage {
      * @returns A promise that resolves when all matching items have been updated.
      */
     async updateAll<T extends EntityBase>(label: string, predicate: (item: T) => boolean, update: (item: T) => void): Promise<void> {
-        const items = await this.all<T>({ label });
+        const items = await this.all<T>( label );
         for (const item of items) {
             if (predicate(item)) {
                 update(item);
@@ -230,6 +242,40 @@ export class OfflineStorage {
     }
 
     /**
+     * Deletes multiple items from storage based on a label and either a predicate function
+     * or an array of items to delete.
+     *
+     * @template T - The type of the entities extending `EntityBase`.
+     * @param label - The label identifying the storage collection.
+     * @param predicateOrItems - Either a predicate function to filter items for deletion
+     * or an array of items to delete directly.
+     * 
+     * If a predicate function is provided, all items in the storage collection matching
+     * the predicate will be deleted. If an array of items is provided, each item in the
+     * array will be deleted.
+     * 
+     * @returns A promise that resolves when the deletion process is complete.
+     */
+    async deleteMany<T extends EntityBase>(label: string, predicateOrItems: ((item: T) => boolean) | T[]): Promise<void> {
+        if (Array.isArray(predicateOrItems)) {
+            // Delete by items array
+            for (const item of predicateOrItems) {
+                await this.delete(label, item);
+            }
+        } else {
+            // Delete by predicate
+            const items = await this.all<T>(label);
+            for (const item of items) {
+                if (predicateOrItems(item)) {
+                    await this.delete(label, item);
+                }
+            }
+        }
+    }
+
+
+
+    /**
      * Retrieves an entity of type `T` by its unique identifier (UUID) from the storage.
      *
      * @template T - The type of the entity that extends `EntityBase`.
@@ -238,9 +284,10 @@ export class OfflineStorage {
      * @returns A promise that resolves to the entity of type `T` if found, or `undefined` if not found.
      */
     async findById<T extends EntityBase>(label: string, uuid: string): Promise<T | undefined> {
-        return await this.provider.findById(label, uuid);
+        const item = await this.provider.findById(label, uuid);
+        if (!item) return undefined;
+        return this.parseItem(label, item) as T;
     }
-
     /**
      * Finds and retrieves items from the storage based on the specified label and query function.
      * Optionally, specific keys can be picked from the retrieved items.
@@ -263,8 +310,8 @@ export class OfflineStorage {
         query: (item: T) => boolean,
         pickKeys?: K[]
     ): Promise<QueryableArray<Pick<T, K>>> {
-        const result = await this.provider.find(label, query, pickKeys);
-        return new QueryableArray<T>(...result as T[]);
+        const items = await this.provider.find(label, query, pickKeys);
+        return new QueryableArray(...items.map(item => this.parseItem(label, item) as unknown as Pick<T, K>));
     }
 
     /**
@@ -273,13 +320,26 @@ export class OfflineStorage {
      * @template T - The type of entities to retrieve, extending `EntityBase`.
      * @param {Object} params - The parameters for the query.
      * @param {string} params.label - The label identifying the type of entities to retrieve.
-     * @returns {Promise<QueryableArray<T>>} A promise that resolves to a `QueryableArray` containing the retrieved entities.
+     * @returns {Promise<Array<T>>} A promise that resolves to a `QueryableArray` containing the retrieved entities.
      */
-    async all<T extends EntityBase>({ label }: { label: string; }): Promise<QueryableArray<T>> {
-        const result = await this.provider.all(label);
-        return new QueryableArray(...result) as QueryableArray<T>; 
+    async all<T extends EntityBase>(label: string): Promise<QueryableArray<T>> {
+        try {
+            const items = await this.provider.all(label);
+            const parsedItems = items.map(item => {
+                const parsedItem = this.parseItem<T>(label, item);
+                if (!parsedItem) {
+                    console.warn(`Failed to parse item for label ${label}:`, item);
+                    return null;
+                }
+                return parsedItem;
+            }).filter(item => item !== null) as T[];
+    
+            return new QueryableArray(...parsedItems);
+        } catch (error) {
+            console.error(`Error retrieving all items for label ${label}:`, error);
+            return new QueryableArray(); // Or throw an error, depending on your error-handling strategy
+        }
     }
-
 
     /**
      * Initializes the offline storage provider with the specified storage name.
@@ -289,9 +349,10 @@ export class OfflineStorage {
      *          or rejects with an error if the initialization fails.
      */
     init(): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
+        
+        return new Promise<void>(async (resolve, reject) => {
             try {
-                this.provider.init(this.storageName);
+                await this.provider.init(this.storageName);
                 resolve();
             } catch (error) {
                 reject(error);
