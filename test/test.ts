@@ -12,7 +12,6 @@ class CustomStringFormater implements IFormatter<string> {
     format(value: string): string {
         return value.toLowerCase(); // always store the value in lower case
     }
-
     parse(value: string): string {
         return value.toUpperCase(); // always return the value in upper case
     }
@@ -30,7 +29,6 @@ class CustomDateFormater implements IFormatter<Date | null> {
         return value;
     }
 }
-
 class User extends PersistedEntity<User> {
     id: string;
     created: number;
@@ -72,8 +70,10 @@ export class TestClint {
             // });
 
             const queried = this.storage.toQueryableArray<User>(users as unknown as User[]);
-            const subset = queried.where((user ) => user.age <= 5);
+            const subset = queried.where((user ) => user.age >= 90).take(2);
             console.log('Subset of users:', subset);
+
+
 
             //  storage.deleteMany("users", users); 
             // users.forEach((user) => {
