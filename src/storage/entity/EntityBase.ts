@@ -1,12 +1,12 @@
-import { IOfflineEntity } from '../interface/IOfflineEntity';
+import { IPersistedEntity } from '../interface/IPersistedEntity ';
 
 /**
  * Represents the base class for entities, providing common properties and functionality
  * for offline entities.
  *
- * @implements {IOfflineEntity}
+ * @implements {IPersistedEntity }
  */
-export class EntityBase implements IOfflineEntity {
+export class PersistedEntityBase implements IPersistedEntity  {
     id: string;
     created: number;
     lastModified: number;

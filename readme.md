@@ -92,10 +92,11 @@ updateAndDeleteUsers();
 
 
 ```
+ 
 
+4. Using QueryableArray
 
 ```typescript 
-4. Using QueryableArray
 
 async function useQueryableArray() {
     const users = storage.getModel<User>('users');

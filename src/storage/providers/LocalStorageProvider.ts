@@ -1,4 +1,4 @@
-import { EntityBase } from '../entity/EntityBase';
+import { PersistedEntityBase } from '../entity/EntityBase';
 import { IOfflineStorageProvider } from '../interface/IOfflineStorageProvider';
 
 export class LocalStorageProvider implements IOfflineStorageProvider {
@@ -18,7 +18,7 @@ export class LocalStorageProvider implements IOfflineStorageProvider {
         });
     }
 
-    async update<T extends EntityBase>(label: string, item: T): Promise<void> {
+    async update<T extends PersistedEntityBase>(label: string, item: T): Promise<void> {
         const model = this.models.get(label);
         if (model) {
             const index = model.collection.findIndex((pre: T) => pre.id === item.id);
@@ -33,7 +33,7 @@ export class LocalStorageProvider implements IOfflineStorageProvider {
         await this.save();
     }
 
-    async delete<T extends EntityBase>(label: string, item: T): Promise<void> {
+    async delete<T extends PersistedEntityBase>(label: string, item: T): Promise<void> {
         const model = this.models.get(label);
         if (model) {
             const index = model.collection.findIndex((pre: T) => pre.id === item.id);
@@ -44,7 +44,7 @@ export class LocalStorageProvider implements IOfflineStorageProvider {
         await this.save();
     }
 
-    async findById<T extends EntityBase>(label: string, uuid: string): Promise<T | undefined> {
+    async findById<T extends PersistedEntityBase>(label: string, uuid: string): Promise<T | undefined> {
         const model = this.models.get(label);
         if (model) {
             return model.collection.find((pre: T) => pre.id === uuid);
@@ -52,7 +52,7 @@ export class LocalStorageProvider implements IOfflineStorageProvider {
         return undefined;
     }
 
-    async find<T extends EntityBase, K extends keyof T = keyof T>(
+    async find<T extends PersistedEntityBase, K extends keyof T = keyof T>(
         label: string,
         query: (item: T) => boolean,
         pickKeys?: K[]
@@ -79,7 +79,7 @@ export class LocalStorageProvider implements IOfflineStorageProvider {
         }
     }
 
-    async all<T extends EntityBase>(label: string): Promise<Array<T>> {
+    async all<T extends PersistedEntityBase>(label: string): Promise<Array<T>> {
         const model = this.models.get(label);
         if (model) {
             return model.collection;
@@ -87,12 +87,12 @@ export class LocalStorageProvider implements IOfflineStorageProvider {
         return [];
     }
 
-    async getModels(): Promise<Map<string, any>> {
+    async getCollections(): Promise<Map<string, any>> {
         return Promise.resolve(this.models);
     }
 
 
-    addModel<T extends EntityBase>(label: string, model: any): void {
+    addCollection<T extends PersistedEntityBase>(label: string, model: any): void {
         this.models.set(label, model);
     }
 
