@@ -1,4 +1,4 @@
-import { EntityBase } from '../entity/EntityBase';
+import { PersistedEntityBase } from '../entity/EntityBase';
 
 /**
  * Interface representing an offline storage provider.
@@ -25,7 +25,7 @@ export interface IOfflineStorageProvider {
      * @param item - The item to update, extending the `EntityBase` type.
      * @returns A promise that resolves when the update operation is complete.
      */
-    update<T extends EntityBase>(label: string, item: T): Promise<void>;
+    update<T extends PersistedEntityBase>(label: string, item: T): Promise<void>;
 
     /**
      * Deletes an item from the storage.
@@ -33,7 +33,7 @@ export interface IOfflineStorageProvider {
      * @param item - The item to delete, extending the `EntityBase` type.
      * @returns A promise that resolves when the delete operation is complete.
      */
-    delete<T extends EntityBase>(label: string, item: T): Promise<void>;
+    delete<T extends PersistedEntityBase>(label: string, item: T): Promise<void>;
 
     /**
      * Finds an item in the storage by its unique identifier.
@@ -41,7 +41,7 @@ export interface IOfflineStorageProvider {
      * @param uuid - The unique identifier of the item to find.
      * @returns A promise that resolves with the found item or `undefined` if not found.
      */
-    findById<T extends EntityBase>(label: string, uuid: string): Promise<T | undefined>;
+    findById<T extends PersistedEntityBase>(label: string, uuid: string): Promise<T | undefined>;
 
     /**
      * Finds items in the storage that match a given query.
@@ -51,7 +51,7 @@ export interface IOfflineStorageProvider {
      * @param pickKeys - An optional array of keys to pick from the matching items.
      * @returns A promise that resolves with an array of matching items, with picked keys if specified.
      */
-    find<T extends EntityBase, K extends keyof T = keyof T>(
+    find<T extends PersistedEntityBase, K extends keyof T = keyof T>(
         label: string,
         query: (item: T) => boolean,
         pickKeys?: K[]
@@ -62,14 +62,14 @@ export interface IOfflineStorageProvider {
      * @param label - The label or collection name to retrieve items from.
      * @returns A promise that resolves with an array of all items in the specified label.
      */
-    all<T extends EntityBase>(label: string): Promise<Array<T>>;
+     all<T extends PersistedEntityBase>(label: string): Promise<T[]>;
 
     /**
-     * Retrieves a map of all models stored in the storage system.
-     * @returns A promise that resolves with a map where keys are model names and values are their corresponding data.
+     * Retrieves a map of all collections stored in the storage system.
+     * @returns A promise that resolves with a map where keys are collection names and values are their corresponding data.
      */
-    getModels(): Promise<Map<string, any>>;
+    getCollections(): Promise<Map<string, any>>;
 
 
-    addModel<T extends EntityBase>(label: string, model: any): void; // Add addModel
+    addCollection<T extends PersistedEntityBase>(label: string, collection: any): void; 
 }

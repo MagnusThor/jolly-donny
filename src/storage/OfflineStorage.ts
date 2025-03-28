@@ -1,36 +1,33 @@
-import { EntityBase } from './entity/EntityBase';
-import { IModelOperations } from './interface/IModelOperations';
-import { IOfflineGraph } from './interface/IOfflineGraph';
+import { PersistedEntityBase } from './entity/EntityBase';
+import { ICollection } from './interface/ICollection';
+import { ICollectionOperations } from './interface/ICollectionOperations';
 import { IOfflineStorageProvider } from './interface/IOfflineStorageProvider';
-import { QueryableArray } from './QueryableArray';
+import { QueryableArray } from './utils/QueryableArray';
 
 /**
- * The `OfflineStorage` class provides a mechanism for managing offline data storage
- * with support for CRUD operations, querying, and change notifications. It utilizes
- * a storage provider implementing the `IOfflineStorageProvider` interface to handle
- * the underlying storage operations.
- *
- * ### Features:
- * - CRUD operations (`insert`, `update`, `delete`) for entities extending `EntityBase`.
- * - Querying capabilities with support for filtering and property selection.
- * - Change notifications via the `onChange` callback.
- * - Utility methods for picking and omitting properties from objects.
- * - Support for managing multiple labeled collections of entities.
- *
- * ### Example Usage:
- * ```typescript
- * const storageProvider: IOfflineStorageProvider = new MyStorageProvider();
- * const offlineStorage = new OfflineStorage(storageProvider, 'my-storage');
- *
- * await offlineStorage.init();
- *
- * const userModel = offlineStorage.getModel<User>('users');
- * await userModel.insert({ id: '1', name: 'John Doe' });
- * const users = await userModel.all();
- * console.log(users);
- * ```
+ * The `OfflineStorage` class provides a mechanism for managing offline storage of entities.
+ * It supports CRUD operations, querying, and advanced manipulation of stored data.
+ * The class is designed to work with a storage provider implementing the `IOfflineStorageProvider` interface.
  *
  * @template T - The type of entities managed by the storage, extending `EntityBase`.
+ *
+ * @remarks
+ * - The class includes utility methods for selecting (`pick`) and omitting (`omit`) properties from objects.
+ * - It supports advanced querying capabilities through `QueryableArray`.
+ * - The `onChange` callback can be used to track changes in the storage.
+ *
+ * @example
+ * ```typescript
+ * const provider: IOfflineStorageProvider = new MyStorageProvider();
+ * const storage = new OfflineStorage(provider, 'my-storage');
+ * 
+ * await storage.init();
+ * 
+ * const userCollection = storage.getCollection<User>('users');
+ * await userCollection.insert({ id: '1', name: 'John Doe' });
+ * const users = await userCollection.all();
+ * console.log(users);
+ * ```
  */
 export class OfflineStorage {
 
@@ -61,15 +58,15 @@ export class OfflineStorage {
      *
      * @template T - The type of the object to pick properties from.
      * @template K - The keys of the properties to pick from the object.
-     * @param model - The object from which properties will be picked.
+     * @param object - The object from which properties will be picked.
      * @param keys - The keys of the properties to include in the resulting object.
      * @returns A new object containing only the specified keys and their corresponding values from the input object.
      */
-    static pick<T extends object, K extends keyof T>(model: T, ...keys: K[]): Pick<T, K> {
+    static pick<T extends object, K extends keyof T>(object: T, ...keys: K[]): Pick<T, K> {
         const result = {} as Pick<T, K>;
         for (const key of keys) {
-            if (key in model) {
-                result[key] = model[key];
+            if (key in object) {
+                result[key] = object[key];
             }
         }
         return result;
@@ -80,12 +77,12 @@ export class OfflineStorage {
      *
      * @template T - The type of the input object.
      * @template K - The keys of the input object to omit.
-     * @param model - The object to copy and omit keys from.
+     * @param object - The object to copy and omit keys from.
      * @param keys - The keys to omit from the resulting object.
      * @returns A new object with the specified keys omitted.
      */
-    static omit<T extends object, K extends keyof T>(model: T, ...keys: K[]): Omit<T, K> {
-        const result = { ...model } as Omit<T, K>;
+    static omit<T extends object, K extends keyof T>(object: T, ...keys: K[]): Omit<T, K> {
+        const result = { ...object } as Omit<T, K>;
         for (const key of keys) {
             delete (result as any)[key];
         }
@@ -93,7 +90,19 @@ export class OfflineStorage {
     }
 
 
-    private parseItem<T extends EntityBase>(label: string, item: any): T {
+    /**
+     * Parses an item and attempts to reconstruct it as an instance of a class
+     * that extends `EntityBase`. If the item is an object and contains a 
+     * `fromJSON` method, it creates a new instance of the item's constructor,
+     * invokes `fromJSON` to populate it, and returns the reconstructed instance.
+     * Otherwise, it casts the item to the specified type `T`.
+     *
+     * @template T - A type that extends `EntityBase`.
+     * @param label - A string label associated with the item (not used in the method logic).
+     * @param item - The item to be parsed, which may be an object with a `fromJSON` method.
+     * @returns The parsed item as an instance of type `T`, or the item cast to type `T` if parsing is not applicable.
+     */
+    private parseItem<T extends PersistedEntityBase>(label: string, item: any): T {
         if (item && typeof (item) === 'object' && 'fromJSON' in item) {
             const temp = new (item.constructor)();
             temp.fromJSON(item);
@@ -103,7 +112,7 @@ export class OfflineStorage {
     }
 
     /**
-     * Retrieves a set of model operations for a specific entity type.
+     * Retrieves a set of collection operations for a specific entity type.
      * 
      * @template T - The type of the entity, extending `EntityBase`.
      * @param label - A string label identifying the entity type.
@@ -118,7 +127,7 @@ export class OfflineStorage {
      * - `get`: Retrieves an entity by its index in the collection.
      * - `toArray`: Retrieves all entities as an array.
      */
-    getModel<T extends EntityBase>(label: string): IModelOperations<T> {
+    getCollection<T extends PersistedEntityBase>(label: string): ICollectionOperations<T> {
         return {
             insert: async (item: T, silent?: boolean) => this.insert(label, item, silent),
             update: (item: T) => this.update(label, item),
@@ -143,18 +152,24 @@ export class OfflineStorage {
     }
 
 
+    async toArray<T extends PersistedEntityBase>(label:string): Promise<T[]> {
+      
+        const results = await this.provider.all<T>(label); 
+        return results;
+    }
+
     /**
-     * Adds a new model to the offline storage with the specified label.
+     * Adds a new collection to the offline storage with the specified label.
      *
-     * @template T - The type of the entities that the model will manage, extending `EntityBase`.
-     * @param label - The label used to identify the new model.
+     * @template T - The type of the entities that the collection will manage, extending `EntityBase`.
+     * @param label - The label used to identify the new collection.
      * @returns A promise that resolves to the newly created offline graph model.
      */
-    async addModel<T extends EntityBase>(label: string): Promise<IOfflineGraph<T>> {
-        const newModel: IOfflineGraph<T> = { label: label, collection: [] };
-        this.provider.addModel(label, newModel);
+    async addCollection<T extends PersistedEntityBase>(label: string): Promise<ICollection<T>> {
+        const collection: ICollection<T> = { label: label, collection: [] };
+        this.provider.addCollection(label, collection);
     
-        return newModel;
+        return collection;
     }
 
     /**
@@ -179,7 +194,7 @@ export class OfflineStorage {
      * @param silent - Optional flag to suppress the `onChange` event if set to `true`.
      * @returns A promise that resolves to the inserted item.
      */
-    async insert<T extends EntityBase>(label: string, item: T, silent?: boolean): Promise<T> {
+    async insert<T extends PersistedEntityBase>(label: string, item: T, silent?: boolean): Promise<T> {
         await this.provider.update(label, item);
         if (this.onChange && !silent) this.onChange({ label, origin: 'insert', item });
         return item;
@@ -198,7 +213,7 @@ export class OfflineStorage {
      * with details about the update operation, including the label, 
      * origin of the change, and the updated item.
      */
-    async update<T extends EntityBase>(label: string, item: T): Promise<void> {
+    async update<T extends PersistedEntityBase>(label: string, item: T): Promise<void> {
         await this.provider.update(label, item);
         if (this.onChange) this.onChange({ label, origin: 'update', item });
     }
@@ -214,7 +229,7 @@ export class OfflineStorage {
      *                 It modifies the item in place.
      * @returns A promise that resolves when all matching items have been updated.
      */
-    async updateAll<T extends EntityBase>(label: string, predicate: (item: T) => boolean, update: (item: T) => void): Promise<void> {
+    async updateAll<T extends PersistedEntityBase>(label: string, predicate: (item: T) => boolean, update: (item: T) => void): Promise<void> {
         const items = await this.all<T>( label );
         for (const item of items) {
             if (predicate(item)) {
@@ -236,7 +251,7 @@ export class OfflineStorage {
      * If an `onChange` callback is defined, it will be invoked after the deletion
      * with details about the operation, including the label, origin, and the deleted item.
      */
-    async delete<T extends EntityBase>(label: string, item: T): Promise<void> {
+    async delete<T extends PersistedEntityBase>(label: string, item: T): Promise<void> {
         await this.provider.delete(label, item);
         if (this.onChange) this.onChange({ label, origin: 'delete', item });
     }
@@ -256,7 +271,7 @@ export class OfflineStorage {
      * 
      * @returns A promise that resolves when the deletion process is complete.
      */
-    async deleteMany<T extends EntityBase>(label: string, predicateOrItems: ((item: T) => boolean) | T[]): Promise<void> {
+    async deleteMany<T extends PersistedEntityBase>(label: string, predicateOrItems: ((item: T) => boolean) | T[]): Promise<void> {
         if (Array.isArray(predicateOrItems)) {
             // Delete by items array
             for (const item of predicateOrItems) {
@@ -283,7 +298,7 @@ export class OfflineStorage {
      * @param uuid - The unique identifier of the entity to retrieve.
      * @returns A promise that resolves to the entity of type `T` if found, or `undefined` if not found.
      */
-    async findById<T extends EntityBase>(label: string, uuid: string): Promise<T | undefined> {
+    async findById<T extends PersistedEntityBase>(label: string, uuid: string): Promise<T | undefined> {
         const item = await this.provider.findById(label, uuid);
         if (!item) return undefined;
         return this.parseItem(label, item) as T;
@@ -305,7 +320,7 @@ export class OfflineStorage {
      * @returns A promise that resolves to a `QueryableArray` containing the items of type `T`
      *          that match the query, with only the specified keys if `pickKeys` is provided.
      */
-    async find<T extends EntityBase, K extends keyof T = keyof T>(
+    async find<T extends PersistedEntityBase, K extends keyof T = keyof T>(
         label: string,
         query: (item: T) => boolean,
         pickKeys?: K[]
@@ -322,7 +337,7 @@ export class OfflineStorage {
      * @param {string} params.label - The label identifying the type of entities to retrieve.
      * @returns {Promise<Array<T>>} A promise that resolves to a `QueryableArray` containing the retrieved entities.
      */
-    async all<T extends EntityBase>(label: string): Promise<QueryableArray<T>> {
+    async all<T extends PersistedEntityBase>(label: string): Promise<QueryableArray<T>> {
         try {
             const items = await this.provider.all(label);
             const parsedItems = items.map(item => {
@@ -339,6 +354,17 @@ export class OfflineStorage {
             console.error(`Error retrieving all items for label ${label}:`, error);
             return new QueryableArray(); // Or throw an error, depending on your error-handling strategy
         }
+    }
+
+    /**
+     * Converts an array of entities into a `QueryableArray`, enabling advanced querying capabilities.
+     *
+     * @template T - The type of entities in the array, extending `EntityBase`.
+     * @param items - The array of entities to be converted.
+     * @returns A `QueryableArray` containing the provided entities.
+     */
+    toQueryableArray<T extends PersistedEntityBase>(items: T[]): QueryableArray<T> {
+        return new QueryableArray<T>(...items);
     }
 
     /**

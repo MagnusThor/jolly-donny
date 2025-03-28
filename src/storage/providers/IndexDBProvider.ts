@@ -1,4 +1,4 @@
-import { EntityBase } from '../entity/EntityBase';
+import { PersistedEntityBase } from '../entity/EntityBase';
 import { IOfflineStorageProvider } from '../interface/IOfflineStorageProvider';
 
 export class IndexedDBProvider implements IOfflineStorageProvider {
@@ -9,8 +9,8 @@ export class IndexedDBProvider implements IOfflineStorageProvider {
     constructor(version: number = 1) {
         this.version = version;
     }
-    addModel<T extends EntityBase>(label: string, model: any): void {
-        throw new Error('No need to add models to IndexedDB provider');
+    addCollection<T extends PersistedEntityBase>(label: string, collection: any): void {
+        throw new Error('No need to add collections to IndexedDB provider');
     }
 
     async init(storageName: string): Promise<void> {
@@ -49,7 +49,7 @@ export class IndexedDBProvider implements IOfflineStorageProvider {
         // IndexedDB handles saving automatically.
     }
 
-    async update<T extends EntityBase>(label: string, item: T): Promise<void> {
+    async update<T extends PersistedEntityBase>(label: string, item: T): Promise<void> {
         const store = await this.getObjectStore('readwrite');
         const data = await store.get(item.id);
         if (data) {
@@ -59,12 +59,12 @@ export class IndexedDBProvider implements IOfflineStorageProvider {
         }
     }
 
-    async delete<T extends EntityBase>(label: string, item: T): Promise<void> {
+    async delete<T extends PersistedEntityBase>(label: string, item: T): Promise<void> {
         const store = await this.getObjectStore('readwrite');
         await store.delete(item.id);
     }
 
-    async findById<T extends EntityBase>(label: string, uuid: string): Promise<T | undefined> {
+    async findById<T extends PersistedEntityBase>(label: string, uuid: string): Promise<T | undefined> {
         const store = await this.getObjectStore('readonly');
         return new Promise<T | undefined>((resolve, reject) => {
             const request = store.get(uuid);
@@ -77,7 +77,7 @@ export class IndexedDBProvider implements IOfflineStorageProvider {
         });
     }
 
-    async find<T extends EntityBase, K extends keyof T = keyof T>(
+    async find<T extends PersistedEntityBase, K extends keyof T = keyof T>(
         label: string,
         query: (item: T) => boolean,
         pickKeys?: K[]
@@ -105,7 +105,7 @@ export class IndexedDBProvider implements IOfflineStorageProvider {
         }
     }
 
-    async all<T extends EntityBase>(label: string): Promise<Array<T>> {
+    async all<T extends PersistedEntityBase>(label: string): Promise<Array<T>> {
         const store = await this.getObjectStore('readonly');
         return new Promise<Array<T>>((resolve, reject) => {
             const request = store.getAll();
@@ -118,7 +118,7 @@ export class IndexedDBProvider implements IOfflineStorageProvider {
         });
     }
 
-    async getModels(): Promise<Map<string, any>> {
-        return Promise.resolve(new Map()); // IndexedDB does not use in-memory models
+    async getCollections(): Promise<Map<string, any>> {
+        return Promise.resolve(new Map()); // IndexedDB does not support getting collections like LocalStorage
     }
 }
