@@ -1,6 +1,6 @@
 import { DefaultFormatter } from '../formaters/DefaultFormatter';
 import { IFormatter } from '../interface/IFormatter';
-import { PersistedEntityBase } from './EntityBase';
+import { PersistedEntityBase } from './PersistedEntityBase';
 import { PersistedEntityBuilder } from './PersistedEntityBuilder';
 
 /**

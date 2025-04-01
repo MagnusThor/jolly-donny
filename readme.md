@@ -1,12 +1,19 @@
-This library provides a robust and flexible offline storage solution for JavaScript applications. It abstracts away the complexities of different storage mechanisms (like LocalStorage and IndexedDB), allowing developers to interact with data collections in a consistent and intuitive way. Key features include:
+# Offline Storage Library
 
-* **Collection-Based Data Management:** Define your data collections as classes that extend `PersistedEntity`, enabling strong typing and object-oriented programming.
-* **Customizable Data Formatting:** Use formatters to transform data during storage and retrieval, handling data type conversions and transformations seamlessly.
-* **Abstraction of Storage Providers:** Easily switch between different storage providers (LocalStorage, IndexedDB, etc.) without modifying your data collection or application logic.
-* **Queryable Data Collections:** Use a `QueryableArray` to perform advanced queries and manipulations on your data collections.
-* **Efficient Data Synchronization:** Provides tools and patterns to keep local data in sync with remote servers.
-* **Error Handling and Robustness:** Includes comprehensive error handling and logging to ensure data integrity and application stability.
-* **Simplified Entity Configuration:** Use `PersistedEntityBuilder` to easily define formatters for your persisted entities.
+A lightweight and flexible offline storage library for JavaScript applications.
+
+## Features
+
+* **Generic Collections:** Create type-safe collections for your data.
+* **CRUD Operations:** Perform standard Create, Read, Update, and Delete operations.
+* **Querying:** Find data using flexible query functions.
+* **Asynchronous Operations:** All operations are asynchronous, ensuring non-blocking execution.
+* **Flexible Storage Providers:** Supports various storage providers (e.g., IndexedDB, LocalStorage).
+* **Data Synchronization:** Includes a helper function for easy data synchronization with remote APIs.
+    * **Optional Transformation:** The `fetch` method allows for optional data transformations, or simply retrieving raw JSON.
+    * **Timeout & Cancellation:** The `fetch` method supports request timeouts and cancellation using `AbortController`.
+* **Type Safety:** Built with TypeScript for enhanced type safety and developer experience.
+* **Extensible:** Designed to be easily extended with custom storage providers and features.
 
 
 ## Installation
@@ -138,7 +145,84 @@ async function addAndRetrieveUsers() {
 ```
 
 
-6.  **Using Formatters with PersistedEntityBuilder**
+6. Using the fetch Helper for Data Synchronization
+
+
+ ```typescript
+interface IMenu {
+  dishes: IDish[];
+  categories: ICategory[];
+}
+
+interface IDish {
+  id: number;
+  category: number;
+  title: string;
+  priceString: string;
+  sku: number;
+  description: string;
+  uuid: string;
+  showInLimited: boolean;
+}
+
+interface ICategory {
+  id: number;
+  name: string;
+}
+
+class ExtendedDish {
+  id: number;
+  category: number;
+  title: string;
+  priceString: string;
+  sku: number;
+  description: string;
+  uuid: string;
+  showInLimited: boolean;
+  categoryName: string;
+
+  get price(): number {
+    const parsedPrice = parseFloat(this.priceString);
+    return isNaN(parsedPrice) ? 0 : parsedPrice;
+  }
+
+  set price(value: number) {
+    this.priceString = value.toFixed(2);
+  }
+}
+
+async function syncAndStoreDishes() {
+  try {
+    const extendedDishes = await OfflineStorage.fetch<IMenu, ExtendedDish[]>('fake-api/data.json', (result) => {
+      const dishes = result.dishes.map((dish) => {
+        const category = result.categories.find((cat) => cat.id === dish.category);
+        const extendedDish = new ExtendedDish();
+        Object.assign(extendedDish, dish);
+        extendedDish.categoryName = category ? category.name : 'Unknown';
+        return extendedDish;
+      });
+      return dishes;
+    });
+
+    for (const dish of extendedDishes) {
+      const existingDish = await storage.getCollection<ExtendedDish>('dishStorage').find((d) => d.uuid === dish.uuid);
+      if (!existingDish || existingDish.length === 0) {
+        await storage.getCollection<ExtendedDish>('dishStorage').insert(dish);
+      }
+    }
+
+    const storedDishes = await storage.getCollection<ExtendedDish>('dishStorage').all();
+    console.log('Stored dishes:', storedDishes);
+  } catch (error) {
+    console.error('Synchronization failed:', error);
+  }
+}
+
+syncAndStoreDishes();
+
+ ```
+
+7.  **Using Formatters with PersistedEntityBuilder**
 
  ```typescript
     import { PersistedEntity, PersistedEntityBuilder, IFormatter } from 'your-package-name';

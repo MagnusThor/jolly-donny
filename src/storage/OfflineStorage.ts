@@ -1,4 +1,4 @@
-import { PersistedEntityBase } from './entity/EntityBase';
+import { PersistedEntityBase } from './entity/PersistedEntityBase';
 import { ICollection } from './interface/ICollection';
 import { ICollectionOperations } from './interface/ICollectionOperations';
 import { IOfflineStorageProvider } from './interface/IOfflineStorageProvider';
@@ -71,6 +71,53 @@ export class OfflineStorage {
         }
         return result;
     }
+
+    /**
+ * Fetches data from a given URL and optionally applies a transformation function.
+ * Supports request timeout and abort functionality.
+ *
+ * @template T - The type of the data returned by the fetch request.
+ * @template A - The type of the data after applying the transformation function.
+ *
+ * @param {string} url - The URL to fetch data from.
+ * @param {((result: T) => A) | undefined} [transformationFunc] - Optional function to transform the fetched data.
+ * @param {RequestInit} [options] - Optional configuration for the fetch request.
+ * @param {number} [timeout=5000] - The timeout duration in milliseconds before the request is aborted.
+ *
+ * @returns {Promise<A | T>} A promise that resolves to the transformed data or the original data if no transformation is needed.
+ *
+ * @throws {Error} Throws an error if the fetch request fails or if the response status is not OK.
+ */
+static async fetch<T, A = T>(
+    url: string,
+    transformationFunc?: (result: T) => A,
+    options?: RequestInit,
+    timeout = 5000
+): Promise<A | T> {
+    const controller = new AbortController();
+    const id = setTimeout(() => controller.abort(), timeout);
+
+    try {
+        const response = await fetch(url, { ...options, signal: controller.signal });
+        clearTimeout(id);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const jsonData = await response.json();
+
+        if (transformationFunc) {
+            return await transformationFunc(jsonData);
+        } else {
+            return jsonData;
+        }
+    } catch (error) {
+        console.error('Fetch error:', error);
+        throw error;
+    }
+}
+
 
     /**
      * Creates a shallow copy of the given object, omitting the specified keys.
@@ -214,6 +261,7 @@ export class OfflineStorage {
      * origin of the change, and the updated item.
      */
     async update<T extends PersistedEntityBase>(label: string, item: T): Promise<void> {
+     
         await this.provider.update(label, item);
         if (this.onChange) this.onChange({ label, origin: 'update', item });
     }

@@ -1,4 +1,4 @@
-import { PersistedEntityBase } from '../entity/EntityBase';
+import { PersistedEntityBase } from '../entity/PersistedEntityBase';
 import { QueryableArray } from '../utils/QueryableArray';
 
 /**

@@ -1,0 +1,922 @@
+{
+    "_id": "66ae0c3ed82c62b6b00e88b4",
+    "categories": [
+        {
+            "uuiid": "9eb30443-9b77-4766-868e-cf15173ea3e7",
+            "id": 1,
+            "name": "Sushi",
+            "uuid": "dd8f7e3b-13e8-49dc-b5e4-a39da849fdd7"
+        },
+        {
+            "id": 11,
+            "name": "Grillad sushi & Sashimi",
+            "uuid": "3b9a8c63-35db-4f44-8859-de14d77923e4"
+        },
+        {
+            "id": 21,
+            "name": "Vegetariskt & Vegan",
+            "uuid": "beb4b9c5-da2e-49f1-9101-8159f684ded1"
+        },
+        {
+            "id": 31,
+            "name": "Barn meny",
+            "uuid": "55ba36ca-f1d8-43fc-9f68-b11e2c02e073"
+        },
+        {
+            "id": 41,
+            "name": "Makirullar",
+            "uuid": "fa730677-e6f6-4da6-b675-38f21609d797"
+        },
+        {
+            "id": 51,
+            "name": "Friterade makirullar",
+            "uuid": "a40c6664-98df-47e7-94d1-2087d8f5824b"
+        },
+        {
+            "id": 61,
+            "name": "Bowl",
+            "uuid": "5b4204db-d067-4981-ac96-c66e1ceba1eb"
+        },
+        {
+            "id": 71,
+            "name": "Varmrätter",
+            "uuid": "8e0289ca-c798-4fe5-8c1e-37a85e3c762c"
+        },
+        {
+            "id": 81,
+            "name": "Aptitretare ",
+            "uuid": "81af54c7-d4b5-4cf7-99fd-9c76ff7fc051"
+        },
+        {
+            "id": 91,
+            "name": "Såser",
+            "uuid": "3ef01f32-8e5e-4103-8ccc-92910ab142ee"
+        },
+        {
+            "id": 101,
+            "name": "Tillbehör",
+            "uuid": "870c5b31-0728-4796-b2ed-28bce068f1ae"
+        },
+        {
+            "id": 111,
+            "name": "Efterrätter",
+            "uuid": "f163924d-ae52-49f3-b6c0-d69a596d2976"
+        },
+        {
+            "id": 121,
+            "name": "Dryck",
+            "uuid": "108207d9-f1cc-4bd6-8489-d416813a54ee"
+        },
+        {
+            "id": 131,
+            "name": "Sushi Burger",
+            "uuid": "44fadb2d-a9e3-4763-bdc2-8a263550c978"
+        },
+        {
+            "id": 141,
+            "name": "New Item",
+            "uuid": "4d9b42b1-df35-4597-aada-d90f23c04e2e"
+        }
+    ],
+    "dishes": [
+        {
+            "category": 1,
+            "title": "Sushi klassisk 9 bitar",
+            "price": 89,
+            "sku": 1,
+            "description": "3 lax, 1 avokado,1 räkor,4 maki",
+            "uuid": "1db8c490-a03c-4300-8353-76407957ad4f",
+            "showInLimied": false
+        },
+        {
+            "category": 1,
+            "title": "Sushi klassisk 11 bitar",
+            "price": 119,
+            "sku": 2,
+            "description": "2 Lax, 1 tonfisk, 1 Räkor, 1 avokado, 1 ägg,1 tofu, 4 maki",
+            "uuid": "cbc1e227-2b2d-4908-93ed-c743b02764a9",
+            "showInLimied": false
+        },
+        {
+            "category": 1,
+            "title": "Sushi klassisk 15 bitar",
+            "price": 159,
+            "sku": 3,
+            "description": "4 lax, 2 räkor, 1 tonfisk, 3 kockens val, 5 maki",
+            "uuid": "0fa9ce83-9a6f-4a0c-b701-dd2f4aaef4cb",
+            "showInLimied": false
+        },
+        {
+            "category": 1,
+            "title": "Enkel Sushi 12 bitar",
+            "price": 139,
+            "sku": 4,
+            "description": "7 lax, 5 maki",
+            "uuid": "773071b8-54f3-4d1a-9ee8-d1a5966c4473",
+            "showInLimied": false
+        },
+        {
+            "category": 1,
+            "title": "Enkel Sushi 15 bitar",
+            "price": 169,
+            "sku": 5,
+            "description": "9 lax, 6 maki",
+            "uuid": "a5c88612-f028-4b76-a3a7-33c64f4ed65d",
+            "showInLimied": false
+        },
+        {
+            "category": 1,
+            "title": "Shake & Sra Sushi 13 bitar",
+            "price": 155,
+            "sku": 6,
+            "description": "4 lax, 4 räkor, 5 maki",
+            "uuid": "cba9f97c-d7c5-4b54-a054-2af8ff4a02ef",
+            "showInLimied": false
+        },
+        {
+            "category": 1,
+            "title": "Faula Special 12 bitar",
+            "price": 139,
+            "sku": 7,
+            "description": "3 lax, 2 räkor, 2 avokado, 5 maki",
+            "uuid": "273c8336-8f9d-4073-b577-78114982aae2",
+            "showInLimied": false
+        },
+        {
+            "category": 1,
+            "title": "Smitingen Special 15 bitar",
+            "price": 169,
+            "sku": 8,
+            "description": "3 lax, 3 räkor, 4 avokado,5 maki",
+            "uuid": "8e986f3b-673a-4987-bb44-8c386c82a331",
+            "showInLimied": false
+        },
+        {
+            "category": 1,
+            "title": "Härnösand Special 20 bitar",
+            "price": 249,
+            "sku": 9,
+            "description": "4 lax, 4 räkor, 2 ägg, 2 tonfisk, 2 tofu, 2 avkokado, 4, maki",
+            "uuid": "1d5298fa-9cd8-42ca-b7dc-45fa0cfe7298",
+            "showInLimied": false
+        },
+        {
+            "category": 1,
+            "title": "Sushi lax 10 bitar",
+            "price": 139,
+            "sku": 10,
+            "description": "10 lax",
+            "uuid": "04e8c070-6fea-4a73-b5e1-504a553a2208",
+            "showInLimied": false
+        },
+        {
+            "category": 1,
+            "title": "Härnö Sushi 30 bitar",
+            "price": 359,
+            "sku": 11,
+            "description": "8 lax, 6 grillad lax, 8 avokado, 8 maki",
+            "uuid": "1b6945c1-5812-4cd0-9dab-7733c9d9701e",
+            "showInLimied": false
+        },
+        {
+            "category": 1,
+            "title": "Familjens Sushi 35 bitar",
+            "price": 369,
+            "sku": 12,
+            "description": "10 lax, 5 räkor, 6 kockens val,3 ägg, 3 tofu, 8 maki",
+            "uuid": "e65a7992-22fe-433e-9591-444267a2b34e",
+            "showInLimied": false
+        },
+        {
+            "category": 1,
+            "title": "Party Sushi 50 bitar",
+            "price": 519,
+            "sku": 13,
+            "description": "35 blandade sushi (lax, avokado, tofu, räkor,ägg),15 maki",
+            "uuid": "08837085-8abe-44a8-b9a0-71bce8ed8c56",
+            "showInLimied": false
+        },
+        {
+            "category": 11,
+            "title": "Sashimi 25 bitar",
+            "price": 299,
+            "sku": 82,
+            "description": "En blanding av rå fisk med ris och sallad",
+            "uuid": "9ce54d9a-48d9-4c84-96cf-1047370dcc75",
+            "showInLimied": false
+        },
+        {
+            "category": 11,
+            "title": "Grillad lax 10 bitar",
+            "price": 149,
+            "sku": 80,
+            "description": "10  bitar grillad lax toppad med rostadlök, chillimajonäs och teriakysås",
+            "uuid": "2907092f-0987-4665-96b6-12099594803e",
+            "showInLimied": false
+        },
+        {
+            "category": 11,
+            "title": "Grillad mix 10 bitar",
+            "price": 159,
+            "sku": 81,
+            "description": "5 lax, 5 tonfisk. toppad med rostadlök, chillimajonäs och teriakysås",
+            "uuid": "275648aa-39a1-488c-a504-1a5e8f16af3e",
+            "showInLimied": false
+        },
+        {
+            "category": 1,
+            "title": "Lax & Räkor 10 bitar",
+            "price": 145,
+            "sku": 18,
+            "description": "5 lax, 5 räkor",
+            "uuid": "9b595373-3793-4072-930f-b22f247be36b",
+            "showInLimied": false
+        },
+        {
+            "category": 21,
+            "title": "Vegetarisk rulle 10 bitar",
+            "price": 119,
+            "sku": 21,
+            "description": "gurka, avokado,paprika,  romansallad",
+            "uuid": "04d018d3-4265-48a3-8ac4-2a3d61687eef",
+            "showInLimied": false
+        },
+        {
+            "category": 21,
+            "title": "Vegan rulle 10 bitar",
+            "price": 119,
+            "sku": 22,
+            "description": "gurka",
+            "uuid": "f54c4bd3-3b24-4ec7-ae55-69c9259cd112",
+            "showInLimied": false
+        },
+        {
+            "category": 31,
+            "title": "Sushi lax 5 bitar",
+            "price": 69,
+            "sku": 90,
+            "description": "5 lax",
+            "uuid": "95e28cbd-5189-48bd-8c8c-4a0cc748c2d3",
+            "showInLimied": false
+        },
+        {
+            "category": 31,
+            "title": "Avokado Sushi 5 bitar",
+            "price": 69,
+            "sku": 91,
+            "description": "5 avokado",
+            "uuid": "0205b93b-556a-4d32-ad4c-697c644aad6b",
+            "showInLimied": false
+        },
+        {
+            "category": 31,
+            "title": "Barn Sushi 7 bitar",
+            "price": 79,
+            "sku": 92,
+            "description": "2 lax, 1 avkokado, 1 tofu, 3 maki",
+            "uuid": "d3f886fc-8786-4a30-b170-c52ca325df47",
+            "showInLimied": false
+        },
+        {
+            "category": 41,
+            "title": "Lax maki 10 bitar",
+            "price": 109,
+            "sku": 26,
+            "description": "lax",
+            "uuid": "bd13b6c1-339f-45ec-bf3e-5170cc3e252f",
+            "showInLimied": false
+        },
+        {
+            "category": 41,
+            "title": "California maki 10 bitar",
+            "price": 99,
+            "sku": 27,
+            "description": "lax, avokado, gurka, krabbstick",
+            "uuid": "db16ce63-871a-4236-90a5-a58b442dbd53",
+            "showInLimied": false
+        },
+        {
+            "category": 41,
+            "title": "Philadelphia maki 10 bitar",
+            "price": 139,
+            "sku": 28,
+            "description": "lax, krabbstick, gurka, avokado, philadelphia, roman sallad",
+            "uuid": "09c655f8-b21a-4e32-a6f8-ccfe2bad006c",
+            "showInLimied": false
+        },
+        {
+            "category": 41,
+            "title": "Yakiniku maki 10 bitar",
+            "price": 139,
+            "sku": 29,
+            "description": "yakiniku, avokado, rostadlök",
+            "uuid": "39e03c1f-2d8e-4c19-8969-79dc57875142",
+            "showInLimied": false
+        },
+        {
+            "category": 41,
+            "title": "Spicy lax maki 10 bitar",
+            "price": 159,
+            "sku": 30,
+            "description": "kryddad lax, avokoado. Toppad med rå lax, rostadlök och sås",
+            "uuid": "f9b593dc-7f99-4ef4-a1f0-f48b38716a99",
+            "showInLimied": false
+        },
+        {
+            "category": 41,
+            "title": "Lyx maki 10 bitar",
+            "price": 149,
+            "sku": 31,
+            "description": "krabbstick, avokado, gurka, philadelphia, grillad lax, sås.",
+            "uuid": "12cfb992-fe59-493a-ba1c-3434481fd43a",
+            "showInLimied": false
+        },
+        {
+            "category": 41,
+            "title": "Mango lax maki 10 bitar",
+            "price": 149,
+            "sku": 32,
+            "description": "mango, gurka, avokado, philadelphia, rå lax och sås",
+            "uuid": "d20eb606-0c41-4a9e-81bc-88de94a25c71",
+            "showInLimied": false
+        },
+        {
+            "category": 41,
+            "title": "Dragon maki 10 bitar",
+            "price": 179,
+            "sku": 33,
+            "description": "friterad tempura räkor, kryddad lax. toppad med avokado och sås",
+            "uuid": "05f96693-8bf1-460a-bd15-beedbad9b5da",
+            "showInLimied": false
+        },
+        {
+            "category": 41,
+            "title": "Avokado maki 10 bitar",
+            "price": 149,
+            "sku": 34,
+            "description": "avokado, gurka, paprika, rödlök, rostadlök,srirachasås och sås",
+            "uuid": "c0013e0f-a4cf-47e4-8948-6d67cd37d67f",
+            "showInLimied": false
+        },
+        {
+            "category": 51,
+            "title": "Friterad California",
+            "price": 129,
+            "sku": 35,
+            "description": "lax, avokado, gurka, krabbstick",
+            "uuid": "1965918a-e1b8-4da7-8377-35b8ca64afb8",
+            "showInLimied": false
+        },
+        {
+            "category": 51,
+            "title": "Friterad lax 10 bitar",
+            "price": 139,
+            "sku": 36,
+            "description": "friterad lax, avokado, roman sallad och sås",
+            "uuid": "3fc691da-2eae-46f6-8bdc-0331b331a860",
+            "showInLimied": false
+        },
+        {
+            "category": 51,
+            "title": "Friterad Tempura 10 bitar",
+            "price": 139,
+            "sku": 37,
+            "description": "friterade tempura räkor, avkokado, roman sallad, sås",
+            "uuid": "b58a0ca6-993e-46f4-9a14-f8f458c7fb84",
+            "showInLimied": false
+        },
+        {
+            "category": 51,
+            "title": "Friterad Kyckling  10 bitar",
+            "price": 139,
+            "sku": 38,
+            "description": "friterad kyckling, avokado, roman sallad och sås",
+            "uuid": "280ffa25-f69e-4803-8592-2c95c191421a",
+            "showInLimied": false
+        },
+        {
+            "category": 51,
+            "title": "Friterad Philadelphia 10 bitar",
+            "price": 139,
+            "sku": 39,
+            "description": "avokado, philadelpiha,roman sallad och sås",
+            "uuid": "0322540e-7f96-45a2-89a9-c4dfee981b50",
+            "showInLimied": false
+        },
+        {
+            "category": 61,
+            "title": "Spicy lax bowl",
+            "price": 139,
+            "sku": 40,
+            "description": "Kryddad lax, ris och sallad. ",
+            "uuid": "3d85ec59-3dfc-4f34-a440-819c26fefd27",
+            "showInLimied": false
+        },
+        {
+            "category": 61,
+            "title": "Bibimbbam bowl",
+            "price": 139,
+            "sku": 41,
+            "description": "Yakiniku (nötkött), ris och sallad",
+            "uuid": "d7d819b8-9c91-4d8c-8777-d210d1ad652c",
+            "showInLimied": false
+        },
+        {
+            "category": 61,
+            "title": "Yakitori bowl",
+            "price": 139,
+            "sku": 42,
+            "description": "Kyckling, ris och sallad",
+            "uuid": "9cb146db-283b-4626-b6e1-accd982a38b9",
+            "showInLimied": false
+        },
+        {
+            "category": 61,
+            "title": "Vegetariska bowl",
+            "price": 139,
+            "sku": 43,
+            "description": "Friterad hallomi, tofu , ris och sallad",
+            "uuid": "9163b9dc-a461-4bc2-b483-d8465d8a06b2",
+            "showInLimied": false
+        },
+        {
+            "category": 71,
+            "title": "Yakitori",
+            "price": 129,
+            "sku": 44,
+            "description": "5st kycklingspett, ris och sallad",
+            "uuid": "88680f5c-5e19-47d6-9e42-9d614ce185a0",
+            "showInLimied": false
+        },
+        {
+            "category": 71,
+            "title": "Yakiniku",
+            "price": 129,
+            "sku": 45,
+            "description": "Stekt skivat nötkött, yakinikusås, ris och sallad",
+            "uuid": "14ab8b19-e24b-4b65-a320-400b5f567f87",
+            "showInLimied": false
+        },
+        {
+            "category": 71,
+            "title": "Dumpling gyoza (Kyckling/Räkor/Veg)",
+            "price": 119,
+            "sku": 46,
+            "description": "8 bitar, ris, sallad och sås",
+            "uuid": "4ce471c7-db17-4ffa-80f6-e593b2c0c6ac",
+            "showInLimied": false
+        },
+        {
+            "category": 71,
+            "title": "Karage 8 bitar",
+            "price": 135,
+            "sku": 47,
+            "description": "friterad kyckling-nuggets ris,sallad och sås",
+            "uuid": "e9f1eefb-6353-4f2e-92a7-e91d6ef01335",
+            "showInLimied": false
+        },
+        {
+            "category": 71,
+            "title": "Crispy lax",
+            "price": 135,
+            "sku": 48,
+            "description": "friterad lax, ris, sallad och sås",
+            "uuid": "ac526bbb-cd09-4014-a80b-c0a60969d276",
+            "showInLimied": false
+        },
+        {
+            "category": 71,
+            "title": "Tempura crispy",
+            "price": 149,
+            "sku": 49,
+            "description": "friterade räkor,ris,sallad och sås",
+            "uuid": "7d74ab9d-d4dc-4220-99be-a6d7efc9e0be",
+            "showInLimied": false
+        },
+        {
+            "category": 71,
+            "title": "Crispy chicken",
+            "price": 135,
+            "sku": 50,
+            "description": "friterad kyckling, ris, sallad och sås",
+            "uuid": "9a66e3a8-943f-4505-85e5-3f04dcdcb1d6",
+            "showInLimied": false
+        },
+        {
+            "category": 81,
+            "title": "Vegatariska vårrullar 5st",
+            "price": 35,
+            "sku": 51,
+            "description": "-",
+            "uuid": "9ddfd2aa-4233-4014-85ef-b2ec68146d4e",
+            "showInLimied": false
+        },
+        {
+            "category": 81,
+            "title": "Karage kyckling 4 st",
+            "price": 35,
+            "sku": 52,
+            "description": "-",
+            "uuid": "adb31f78-0945-430a-ad76-fe264a9585c3",
+            "showInLimied": false
+        },
+        {
+            "category": 81,
+            "title": "Räkchips",
+            "price": 45,
+            "sku": 53,
+            "description": "-",
+            "uuid": "dbe0ce37-933d-4f1b-ba93-0728017f110c",
+            "showInLimied": false
+        },
+        {
+            "category": 91,
+            "title": "Soja",
+            "price": 10,
+            "sku": 54,
+            "description": "-",
+            "uuid": "e74b085a-9643-4795-8a6c-f6d800df91c0",
+            "showInLimied": false
+        },
+        {
+            "category": 91,
+            "title": "Chillimajonäs",
+            "price": 15,
+            "sku": 55,
+            "description": "-",
+            "uuid": "2f477561-05dd-4b2b-94d6-6271f84607a8",
+            "showInLimied": false
+        },
+        {
+            "category": 91,
+            "title": "Majonäs",
+            "price": 15,
+            "sku": 56,
+            "description": "-",
+            "uuid": "b78523b6-d759-49e4-b730-9a45377fe89f",
+            "showInLimied": false
+        },
+        {
+            "category": 91,
+            "title": "Teriakisås",
+            "price": 15,
+            "sku": 57,
+            "description": "-",
+            "uuid": "19881c7b-6d6d-46d0-8d19-5caa7405aeb4",
+            "showInLimied": false
+        },
+        {
+            "category": 91,
+            "title": "Srirachasås",
+            "price": 10,
+            "sku": 58,
+            "description": "-",
+            "uuid": "30134e00-c1e0-4f3b-aebe-ccebb56a0a9a",
+            "showInLimied": false
+        },
+        {
+            "category": 91,
+            "title": "Wasabi",
+            "price": 10,
+            "sku": 59,
+            "description": "-",
+            "uuid": "4b838e68-74a7-45bd-b08a-8115abf14e86",
+            "showInLimied": false
+        },
+        {
+            "category": 101,
+            "title": "Ris (Sushiris)",
+            "price": 29,
+            "sku": 60,
+            "description": "Sushi ris",
+            "uuid": "3ea022d0-5542-40c8-a0a2-63fd3acd7ce2",
+            "showInLimied": false
+        },
+        {
+            "category": 101,
+            "title": "Sjögräs",
+            "price": 10,
+            "sku": 61,
+            "description": "-",
+            "uuid": "b013554e-8a84-4305-8b85-7200b8f4ac4a",
+            "showInLimied": false
+        },
+        {
+            "category": 101,
+            "title": "Ingefära",
+            "price": 10,
+            "sku": 62,
+            "description": "-",
+            "uuid": "0faa1d75-c55a-4a05-998b-43b12e7ee9f7",
+            "showInLimied": false
+        },
+        {
+            "category": 101,
+            "title": "Krabbstick",
+            "price": 15,
+            "sku": 63,
+            "description": "-",
+            "uuid": "634ac056-3e6f-4961-b080-41f9ba678854",
+            "showInLimied": false
+        },
+        {
+            "category": 101,
+            "title": "Ägg",
+            "price": 15,
+            "sku": 64,
+            "description": ".",
+            "uuid": "c332bdf2-359f-44a4-a315-903c2afd998e",
+            "showInLimied": false
+        },
+        {
+            "category": 101,
+            "title": "Tofu",
+            "price": 15,
+            "sku": 65,
+            "description": "-",
+            "uuid": "582ae4a6-902a-4044-be0a-fca0eb939544",
+            "showInLimied": false
+        },
+        {
+            "category": 101,
+            "title": "Rättika",
+            "price": 15,
+            "sku": 66,
+            "description": ".",
+            "uuid": "624b496d-15ee-4389-96ee-cc2d9aee271d",
+            "showInLimied": false
+        },
+        {
+            "category": 101,
+            "title": "Lax",
+            "price": 20,
+            "sku": 67,
+            "description": "-",
+            "uuid": "9b3d555d-f138-4eeb-8ac7-766b7bce14bf",
+            "showInLimied": false
+        },
+        {
+            "category": 101,
+            "title": "Räkor",
+            "price": 20,
+            "sku": 68,
+            "description": "-",
+            "uuid": "34de6ea5-a9d4-429a-b055-773200120c8b",
+            "showInLimied": false
+        },
+        {
+            "category": 101,
+            "title": "Bläckfisk",
+            "price": 20,
+            "sku": 69,
+            "description": "-",
+            "uuid": "7f918c96-14ee-4780-9bca-47e006e25f75",
+            "showInLimied": false
+        },
+        {
+            "category": 101,
+            "title": "Bläckfisksallad",
+            "price": 49,
+            "sku": 70,
+            "description": "-",
+            "uuid": "a839bd5a-714f-4d1a-9396-b22473eb57bc",
+            "showInLimied": false
+        },
+        {
+            "category": 101,
+            "title": "Tonfisk",
+            "price": 20,
+            "sku": 71,
+            "description": "-",
+            "uuid": "5ca659d4-7962-488d-b4b0-710377e25061",
+            "showInLimied": false
+        },
+        {
+            "category": 101,
+            "title": "Svärdfisk",
+            "price": 20,
+            "sku": 72,
+            "description": "-",
+            "uuid": "7dff926d-a562-474a-a800-79d735acce74",
+            "showInLimied": false
+        },
+        {
+            "category": 101,
+            "title": "Miso soppa",
+            "price": 15,
+            "sku": 73,
+            "description": "-",
+            "uuid": "82915c6f-c6ec-4413-a7f1-9c74e07a9ddd",
+            "showInLimied": false
+        },
+        {
+            "category": 101,
+            "title": "Sjögräs (stor)",
+            "price": 45,
+            "sku": 75,
+            "description": "-",
+            "uuid": "fe5aaac6-8a08-459d-a77f-c476774d497a",
+            "showInLimied": false
+        },
+        {
+            "category": 111,
+            "title": "Mochi choklad",
+            "price": 25,
+            "sku": 76,
+            "description": "Japanskglass",
+            "uuid": "dae688dd-b1e6-4b00-910a-401e9b5feb4b",
+            "showInLimied": false
+        },
+        {
+            "category": 111,
+            "title": "Mochi mango",
+            "price": 25,
+            "sku": 77,
+            "description": "Japanskglass",
+            "uuid": "857cf2f6-0c2f-4eb4-91ff-f397242c4e97",
+            "showInLimied": false
+        },
+        {
+            "category": 111,
+            "title": "Mochi hallon",
+            "price": 25,
+            "sku": 78,
+            "description": "Japanskglass",
+            "uuid": "1b429f28-dd5c-4df1-afc0-1eaae46c8ef8",
+            "showInLimied": false
+        },
+        {
+            "category": 111,
+            "title": "Mochi jordgubb",
+            "price": 25,
+            "sku": 79,
+            "description": "Japanskglass",
+            "uuid": "9ab86c9d-43b4-4896-bc20-33586604e105",
+            "showInLimied": false
+        },
+        {
+            "category": 121,
+            "title": "Coca-Cola 33cl",
+            "price": 20,
+            "sku": 200,
+            "description": "-",
+            "uuid": "6bad07ac-0402-4f5c-82b4-b46995cb6b5d",
+            "showInLimied": false
+        },
+        {
+            "category": 121,
+            "title": "Coca-Cola Zero 33 cl",
+            "price": 20,
+            "sku": 201,
+            "description": "-",
+            "uuid": "f34868c9-3aa1-4df8-89b4-8d08c54abfce",
+            "showInLimied": false
+        },
+        {
+            "category": 121,
+            "title": "Fanta 33 cl",
+            "price": 20,
+            "sku": 202,
+            "description": "-",
+            "uuid": "b5430df2-c438-4d4d-b0b2-2306f8c4207f",
+            "showInLimied": false
+        },
+        {
+            "category": 121,
+            "title": "Sprite 33 cl",
+            "price": 20,
+            "sku": 203,
+            "description": "-",
+            "uuid": "23005393-624f-4455-86f6-acabfa6ae316",
+            "showInLimied": false
+        },
+        {
+            "category": 121,
+            "title": "Trocadero 33 cl",
+            "price": 20,
+            "sku": 204,
+            "description": "-",
+            "uuid": "bb79616e-6db1-4a45-8f85-d9375b77f8dc",
+            "showInLimied": false
+        },
+        {
+            "category": 121,
+            "title": "Bonaqua naturell 33 cl",
+            "price": 20,
+            "sku": 205,
+            "description": "-",
+            "uuid": "5bf0ee91-c5c2-4976-919d-cc37b6747a32",
+            "showInLimied": false
+        },
+        {
+            "category": 121,
+            "title": "Bonaqua citron",
+            "price": 20,
+            "sku": 206,
+            "description": "-",
+            "uuid": "c4b11086-10e0-4c23-8b6b-b2dd49d254ae",
+            "showInLimied": false
+        },
+        {
+            "category": 131,
+            "title": "Lax Burger",
+            "price": 179,
+            "sku": 100,
+            "description": "Lax\nAlla \"burgare\" serveras med ris, avokado, philadelphiaost, dressing, wasabi och toppas med sesamfrön och panko.",
+            "uuid": "8ec77a2b-0323-4252-851d-e4a0767f8b22",
+            "showInLimied": false
+        },
+        {
+            "category": 131,
+            "title": "Yakiniku Buger",
+            "price": 179,
+            "sku": 101,
+            "description": "Stekt nöttkött\nAlla \"burgare\" serveras med ris, avokado, philadelphiaost, dressing, wasabi och toppas med sesamfrön och panko.",
+            "uuid": "20bfe1ea-1edb-4c09-b7c6-e19d6e142a3f",
+            "showInLimied": false
+        },
+        {
+            "category": 131,
+            "title": "Kyckling Burger",
+            "price": 179,
+            "sku": 102,
+            "description": "Friterad kyckling\nAlla \"burgare\" serveras med ris, avokado, philadelphiaost, dressing, wasabi och toppas med sesamfrön och panko.",
+            "uuid": "1dafd79f-5718-4a22-996a-152ab07e1b25",
+            "showInLimied": false
+        },
+        {
+            "category": 1,
+            "title": "Nybron 17 bitar",
+            "price": 179,
+            "sku": 14,
+            "description": "5 maki, 5 lax, 4 räkor, 3 avokado",
+            "uuid": "4fc87dfa-b997-4f56-bbbd-313362814db4",
+            "showInLimied": false
+        },
+        {
+            "category": 1,
+            "title": "Skeppsbron 16 bitar",
+            "price": 179,
+            "sku": 15,
+            "description": "4 lax, 4 räkor, 4 avokado, 4 maki",
+            "uuid": "6d2fef40-0b37-4db7-9e0c-d6598838bcfb",
+            "showInLimied": false
+        },
+        {
+            "category": 1,
+            "title": "Lax & Avokado 10 bitar",
+            "price": 139,
+            "sku": 16,
+            "description": "5 lax, 5 avokado",
+            "uuid": "db4eea08-0331-40ef-b37a-3bd06118f3fb",
+            "showInLimied": false
+        },
+        {
+            "category": 1,
+            "title": "Lax & Tonfisk 10 bitar 🔥",
+            "price": 149,
+            "sku": 17,
+            "description": "5 lax,5 tonfisk.Toppas med chilimajonnäs,teriyakisås,srirachasås",
+            "uuid": "81881ffa-c365-4241-898a-7f292448fee6",
+            "showInLimied": false
+        },
+        {
+            "category": 1,
+            "title": "Lax & Räkor 10 bitar",
+            "price": 145,
+            "sku": 18,
+            "description": "5 lax, 5 räkor",
+            "uuid": "65fb36b8-7302-46c7-8cdd-0bf3ceb3746e",
+            "showInLimied": false
+        },
+        {
+            "category": 21,
+            "title": "Halloumi rulle 10 bitar",
+            "price": 149,
+            "sku": 23,
+            "description": "gurka, avokado, paprika, halloumi, romansallad",
+            "uuid": "b9e861db-eb54-43ec-b08e-8e78da434586",
+            "showInLimied": false
+        },
+        {
+            "category": 21,
+            "title": "Vegan Sushi 12 bitar",
+            "price": 135,
+            "sku": 24,
+            "description": "3 avokado, 2 rättika, 2 tofu, 5 maki",
+            "uuid": "e785235b-3881-4975-8b05-bfb933648cfd",
+            "showInLimied": false
+        },
+        {
+            "category": 21,
+            "title": "Avokado med maki 12 bitar",
+            "price": 139,
+            "sku": 25,
+            "description": "7 avokado, 5 maki\n",
+            "uuid": "cb2d888e-0a33-4b23-90f5-aed9c1e29ac8",
+            "showInLimied": false
+        }
+    ],
+    "uuid": "",
+    "useLimited": null
+}
