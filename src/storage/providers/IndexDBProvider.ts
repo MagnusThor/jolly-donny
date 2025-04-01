@@ -1,4 +1,4 @@
-import { PersistedEntityBase } from '../entity/EntityBase';
+import { PersistedEntityBase } from '../entity/PersistedEntityBase';
 import { IOfflineStorageProvider } from '../interface/IOfflineStorageProvider';
 
 export class IndexedDBProvider implements IOfflineStorageProvider {

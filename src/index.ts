@@ -5,7 +5,7 @@ export * from './storage/interface/ICollection'
 export * from './storage/interface/IOfflineStorageProvider'
 export * from './storage/providers/IndexDBProvider'
 export * from './storage/providers/LocalStorageProvider'
-export * from './storage/entity/EntityBase'
+export * from './storage/entity/PersistedEntityBase'
 export * from './storage/utils/QueryableArray'
 export * from './storage/OfflineStorage'
 export * from './storage/entity/PersistedEntity';

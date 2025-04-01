@@ -1,144 +1,100 @@
 import {
   LocalStorageProvider,
   OfflineStorage,
+  QueryableArray,
 } from '../src/index';
-import { PersistedEntity } from '../src/storage/entity/PersistedEntity';
+import { ExtendedDish } from './fake-api/ExtendedDish';
+import { IExtendedDish } from './fake-api/IExtendedDish';
 import {
-  PersistedEntityBuilder,
-} from '../src/storage/entity/PersistedEntityBuilder';
-import { IFormatter } from '../src/storage/interface/IFormatter';
+  IDish,
+  IMenu,
+} from './fake-api/MenuModel';
 
-class CustomStringFormater implements IFormatter<string> {
-    format(value: string): string {
-        return value.toLowerCase(); // always store the value in lower case
-    }
-    parse(value: string): string {
-        return value.toUpperCase(); // always return the value in upper case
-    }
-}
-class CustomDateFormater implements IFormatter<Date | null> {
-    format(value: Date | null): Date | null {
-        // Store the Date object as is
-        return value;
-    }
-    parse(value: Date | null): Date | null {
-        if (!value) {
-            return null;
+export class SyncHelper {
+    static async fetch<T, A>(
+        url: string,
+        transformationFunc: (result: T) => A,
+        options?: RequestInit,
+        timeout = 5000
+    ): Promise<A> {
+        const controller = new AbortController();
+        const id = setTimeout(() => controller.abort(), timeout);
+
+        try {
+            const response = await fetch(url, { ...options, signal: controller.signal });
+            clearTimeout(id);
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            return await transformationFunc(await response.json());
+        } catch (error) {
+            console.error('Fetch error:', error);
+            throw error;
         }
-        value.setHours(0, 0, 0, 0); // set the time to 00:00:00.000
-        return value;
     }
 }
-class User extends PersistedEntity<User> {
-    id: string;
-    created: number;
-    lastModified: number;
-    name: string;
-    age: number;
-    birthDate: Date | null = null;
-    constructor(name: string, age: number) {
-        super(new PersistedEntityBuilder<User>()
-            .addFormatter('name', new CustomStringFormater())
-            .addFormatter('birthDate', new CustomDateFormater())
-        );
-        this.id = crypto.randomUUID();
-        this.created = Date.now();
-        this.lastModified = Date.now();
-        this.name = name;
-        this.age = age;
-        this.birthDate = new Date();
-    }
-}
-
-
 export class TestClint {
-    storage: OfflineStorage;
-
-    async setup() {
-
-    }
+    storage!: OfflineStorage;
+   
 
     async runCommands() {
 
-        
-        this.storage.getCollection("users").toArray().then((users) => {
-
-            console.log('Users:', users);  
-            
-            // users.forEach((user) => {
-            //     console.log(user);
-            // });
-
-            const queried = this.storage.toQueryableArray<User>(users as unknown as User[]);
-            const subset = queried.where((user ) => user.age >= 90).take(2);
-            console.log('Subset of users:', subset);
-
-
-
-            //  storage.deleteMany("users", users); 
-            // users.forEach((user) => {
-            //     storage.delete("users", user);
-            // });
-
+        const extendedDishes = await SyncHelper.fetch<IMenu,IExtendedDish[]>('fake-api/data.json', (result) => {
+            const dishes = new QueryableArray(...result.dishes);
+            const categories = new QueryableArray(...result.categories);    
+            const extendedDishes = dishes.map((dish) => {
+                const category = categories.find((cat) => cat.id === dish.category);
+                const extendedDish = new ExtendedDish();          
+                Object.assign<ExtendedDish,IDish>(extendedDish, dish);    
+                extendedDish.categoryName = category ? category.name : 'Unknown';
+                return extendedDish;
+            });
+            return extendedDishes; 
         });
+           
+        extendedDishes.forEach(async (dish) => {
+            const existingDish = await this.storage.find<ExtendedDish>('dishStorage', (d) => d.uuid === dish.uuid);
+            if (existingDish.length == 0) {
+                await this.storage.insert('dishStorage', dish);
+            }
+        });   
 
-        const newUser = new User('Magnus', Math.floor(Math.random() * 100));
-        this.storage.insert('users', newUser);
-
-        const retrievedUser = await this.storage.getCollection<User>('users').findById(newUser.id);
-        if (retrievedUser) {
-            console.log('Retrieved user:', retrievedUser);
-            console.log('Retrieved user name:', retrievedUser.name); // Should be "JOHN DOE"
-        }
-
-
+         const collection = await this.storage.getCollection<ExtendedDish>('dishStorage').toArray();
+         collection.forEach ( item => {
+                    console.log(item);
+         });
+     
     }
     constructor() {
-
 
         const provider = new LocalStorageProvider();
         //const provider = new IndexedDBProvider
 
-        this.storage = new OfflineStorage(provider, 'testStorage');
+        this.storage = new OfflineStorage(provider, 'dishStorage');
         this.storage.init().then(async () => {
             console.log('Storage initialized');
             await this.runCommands();
-
-
         }
         ).catch(async () => {
-            this.storage.addCollection('users');
+            console.log('Storage initialization failed, creating new storage');
+            this.storage.addCollection<IExtendedDish>('dishStorage');
             this.storage.save();
             await this.runCommands();
+        });
 
-        }
-        );
-
-
-
-        // if(!storage.getModel('users')){
-        //     storage.addModel('users');      
-        // }
-
-        //  const user = new User('John Doe', 25);
-        //  storage.insert("users",user);
-
-        //  storage.save();
 
     }
 
-    async test() {
-
-        return true;
-
-    }
+   
 }
 
 document.addEventListener('DOMContentLoaded', () => {
 
     const testApp = new TestClint()
 
-    testApp.test();
+
 
 
 

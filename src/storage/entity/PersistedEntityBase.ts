@@ -12,8 +12,10 @@ export class PersistedEntityBase implements IPersistedEntity  {
     lastModified: number;
 
     constructor() {
-        this.id = crypto.randomUUID();
+        this.id = crypto.randomUUID(); 
         this.created = Date.now();
         this.lastModified = Date.now();
     }
+
+  
 }

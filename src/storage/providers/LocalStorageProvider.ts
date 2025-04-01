@@ -1,4 +1,4 @@
-import { PersistedEntityBase } from '../entity/EntityBase';
+import { PersistedEntityBase } from '../entity/PersistedEntityBase';
 import { IOfflineStorageProvider } from '../interface/IOfflineStorageProvider';
 
 export class LocalStorageProvider implements IOfflineStorageProvider {
@@ -20,6 +20,7 @@ export class LocalStorageProvider implements IOfflineStorageProvider {
 
     async update<T extends PersistedEntityBase>(label: string, item: T): Promise<void> {
         const model = this.models.get(label);
+        
         if (model) {
             const index = model.collection.findIndex((pre: T) => pre.id === item.id);
             if (index !== -1) {
