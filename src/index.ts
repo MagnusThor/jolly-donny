@@ -13,3 +13,8 @@ export * from '../src/storage/interface/IFormatter';
 export * from '../src/storage/formaters/DefaultFormatter';  
 export * from '../src/storage/entity/PersistedEntityBuilder';
 export * from '../src/storage/interface/IEntityDefinition';
+export * from '../src/storage/interface/IInterceptor'
+export * from '../src/storage/interface/IProviderConfig'
+export * from '../src/storage/interface/IWebApiConfig'
+export * from '../src/storage/interceptors/WebApiInterceptor'
+

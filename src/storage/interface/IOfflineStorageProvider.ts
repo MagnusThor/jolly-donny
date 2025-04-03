@@ -1,4 +1,5 @@
 import { PersistedEntityBase } from '../entity/PersistedEntityBase';
+import { IProviderConfig } from './IProviderConfig';
 
 /**
  * Interface representing an offline storage provider.
@@ -72,4 +73,7 @@ export interface IOfflineStorageProvider {
 
 
     addCollection<T extends PersistedEntityBase>(label: string, collection: any): void; 
+
+
+    constructor(config?: IProviderConfig): IOfflineStorageProvider; 
 }

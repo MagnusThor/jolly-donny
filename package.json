@@ -1,6 +1,6 @@
 {
   "name": "jolly-donny",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "main": "dist/src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -11,6 +11,7 @@
   "license": "MIT",
   "description": "",
   "devDependencies": {
+    "mongodb": "^6.15.0",
     "typedoc": "^0.27.9",
     "typescript": "^5.7.3",
     "webpack": "^5.98.0"

@@ -1,7 +1,11 @@
 import { PersistedEntityBase } from '../entity/PersistedEntityBase';
 import { IOfflineStorageProvider } from '../interface/IOfflineStorageProvider';
+import { IProviderConfig } from '../interface/IProviderConfig';
 
 export class LocalStorageProvider implements IOfflineStorageProvider {
+    ['constructor'](config?: IProviderConfig): IOfflineStorageProvider {
+        throw new Error('Method not implemented.');
+    }
     private models: Map<string, any> = new Map();
     private storageName!: string;
 

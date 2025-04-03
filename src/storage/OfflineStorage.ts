@@ -88,36 +88,30 @@ export class OfflineStorage {
  *
  * @throws {Error} Throws an error if the fetch request fails or if the response status is not OK.
  */
-static async fetch<T, A = T>(
-    url: string,
-    transformationFunc?: (result: T) => A,
-    options?: RequestInit,
-    timeout = 5000
-): Promise<A | T> {
-    const controller = new AbortController();
-    const id = setTimeout(() => controller.abort(), timeout);
 
-    try {
-        const response = await fetch(url, { ...options, signal: controller.signal });
-        clearTimeout(id);
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+     static async fetch<T, A>(
+            url: string,
+            transformationFunc: (result: T) => A,
+            options?: RequestInit,
+            timeout = 5000
+        ): Promise<A> {
+            const controller = new AbortController();
+            const id = setTimeout(() => controller.abort(), timeout);
+    
+            try {
+                const response = await fetch(url, { ...options, signal: controller.signal });
+                clearTimeout(id);
+    
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+    
+                return await transformationFunc(await response.json());
+            } catch (error) {
+                console.error('Fetch error:', error);
+                throw error;
+            }
         }
-
-        const jsonData = await response.json();
-
-        if (transformationFunc) {
-            return await transformationFunc(jsonData);
-        } else {
-            return jsonData;
-        }
-    } catch (error) {
-        console.error('Fetch error:', error);
-        throw error;
-    }
-}
-
 
     /**
      * Creates a shallow copy of the given object, omitting the specified keys.
