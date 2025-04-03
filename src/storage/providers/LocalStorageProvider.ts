@@ -2,6 +2,38 @@ import { PersistedEntityBase } from '../entity/PersistedEntityBase';
 import { IOfflineStorageProvider } from '../interface/IOfflineStorageProvider';
 import { IProviderConfig } from '../interface/IProviderConfig';
 
+/**
+ * The `LocalStorageProvider` class implements the `IOfflineStorageProvider` interface
+ * and provides a mechanism for managing data storage using the browser's local storage.
+ * 
+ * This provider allows for the creation, retrieval, updating, and deletion of collections
+ * and their associated entities. It also supports querying and serialization of data.
+ * 
+ * ### Features:
+ * - Initialize storage with a specific name.
+ * - Add, update, delete, and retrieve entities in collections.
+ * - Query collections with custom filters and optional key selection.
+ * - Serialize and deserialize data for persistence in local storage.
+ * - Manage multiple collections using a map-based structure.
+ * 
+ * ### Usage:
+ * 1. Initialize the provider with a storage name using the `init` method.
+ * 2. Add collections using the `addCollection` method.
+ * 3. Perform CRUD operations on entities within collections.
+ * 4. Save changes to local storage using the `save` method.
+ * 
+ * ### Example:
+ * ```typescript
+ * const provider = new LocalStorageProvider();
+ * await provider.init('myStorage');
+ * provider.addCollection('users', { collection: [] });
+ * await provider.update('users', { id: '1', name: 'John Doe', lastModified: Date.now() });
+ * const user = await provider.findById('users', '1');
+ * console.log(user);
+ * ```
+ * 
+ * @implements {IOfflineStorageProvider}
+ */
 export class LocalStorageProvider implements IOfflineStorageProvider {
     ['constructor'](config?: IProviderConfig): IOfflineStorageProvider {
         throw new Error('Method not implemented.');

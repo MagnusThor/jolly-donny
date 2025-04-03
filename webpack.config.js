@@ -4,7 +4,7 @@ module.exports = {
     mode: "development",
     watch: false,
     entry: {
-        "test-client": "./dist/test/test.js"
+        "test-client": "./dist/test/test-app.js"
         
     },
     output: {

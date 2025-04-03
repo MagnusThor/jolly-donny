@@ -71,13 +71,11 @@ export class TestClint {
             await this.runCommands();
         }
         ).catch(async () => {
-            console.log('Storage initialization failed, creating new storage');
+            logger('Storage initialization failed, creating new storage');
             this.storage.addCollection<IExtendedDish>('dishStorage');
             this.storage.save();
             await this.runCommands();
         });
-
-
     }
 
    
@@ -86,9 +84,5 @@ export class TestClint {
 document.addEventListener('DOMContentLoaded', () => {
 
     const testApp = new TestClint()
-
-
-
-
 
 });
