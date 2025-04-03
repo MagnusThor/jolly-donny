@@ -6,14 +6,36 @@ export class LocalStorageProvider implements IOfflineStorageProvider {
     ['constructor'](config?: IProviderConfig): IOfflineStorageProvider {
         throw new Error('Method not implemented.');
     }
+    /**
+     * Creates an instance of the LocalStorageProvider.
+     *
+     * @param config - Optional configuration object implementing the IProviderConfig interface.
+     *                 This can be used to customize the behavior of the provider.
+     */
+    constructor(config?: IProviderConfig){    
+        console.log("",config);    
+    }
     private models: Map<string, any> = new Map();
     private storageName!: string;
 
+    /**
+     * Initializes the local storage provider with the specified storage name.
+     * This method sets the storage name and attempts to deserialize any existing
+     * data associated with it.
+     *
+     * @param storageName - The name of the storage to initialize.
+     * @returns A promise that resolves when the initialization is complete.
+     */
     async init(storageName: string): Promise<void> {
         this.storageName = storageName;
         await this.deSerialize();
     }
 
+    /**
+     * Saves the current state of the storage provider to the browser's local storage.
+     *
+     * @returns A promise that resolves once the data has been successfully saved.
+     */
     async save(): Promise<void> {
         return new Promise<void>((resolve) => {
             const data = this.serialize();
@@ -22,6 +44,16 @@ export class LocalStorageProvider implements IOfflineStorageProvider {
         });
     }
 
+    /**
+     * Updates an existing item in the collection associated with the given label.
+     * If the item does not exist in the collection, it will be added.
+     * The `lastModified` property of the item is updated to the current timestamp.
+     * 
+     * @template T - A type that extends `PersistedEntityBase`.
+     * @param label - The label identifying the collection to update.
+     * @param item - The item to update or add to the collection.
+     * @returns A promise that resolves when the update operation is complete.
+     */
     async update<T extends PersistedEntityBase>(label: string, item: T): Promise<void> {
         const model = this.models.get(label);
         
@@ -38,6 +70,14 @@ export class LocalStorageProvider implements IOfflineStorageProvider {
         await this.save();
     }
 
+    /**
+     * Deletes an item from the specified collection in local storage.
+     *
+     * @template T - The type of the entity that extends `PersistedEntityBase`.
+     * @param label - The label identifying the collection to delete the item from.
+     * @param item - The item to be deleted, identified by its `id` property.
+     * @returns A promise that resolves when the item has been removed and the changes are saved.
+     */
     async delete<T extends PersistedEntityBase>(label: string, item: T): Promise<void> {
         const model = this.models.get(label);
         if (model) {
@@ -49,6 +89,14 @@ export class LocalStorageProvider implements IOfflineStorageProvider {
         await this.save();
     }
 
+    /**
+     * Retrieves an entity of type `T` from the specified collection by its unique identifier.
+     *
+     * @template T - The type of the entity, extending `PersistedEntityBase`.
+     * @param label - The label identifying the collection to search in.
+     * @param uuid - The unique identifier of the entity to find.
+     * @returns A promise that resolves to the entity of type `T` if found, or `undefined` if not found.
+     */
     async findById<T extends PersistedEntityBase>(label: string, uuid: string): Promise<T | undefined> {
         const model = this.models.get(label);
         if (model) {
@@ -57,6 +105,18 @@ export class LocalStorageProvider implements IOfflineStorageProvider {
         return undefined;
     }
 
+    /**
+     * Finds and retrieves items from a specified model based on a query function.
+     * Optionally, specific keys can be picked from the matched items.
+     *
+     * @template T - The type of the persisted entity.
+     * @template K - The keys of the entity to pick (defaults to all keys of T).
+     * @param label - The label identifying the model to search within.
+     * @param query - A function used to filter items in the model's collection.
+     * @param pickKeys - An optional array of keys to pick from the matched items.
+     * @returns A promise that resolves to an array of items matching the query,
+     *          with only the specified keys if `pickKeys` is provided.
+     */
     async find<T extends PersistedEntityBase, K extends keyof T = keyof T>(
         label: string,
         query: (item: T) => boolean,
@@ -84,6 +144,14 @@ export class LocalStorageProvider implements IOfflineStorageProvider {
         }
     }
 
+    /**
+     * Retrieves all entities of a specified type from the local storage provider.
+     *
+     * @template T - The type of the entities, extending `PersistedEntityBase`.
+     * @param label - The label identifying the collection of entities to retrieve.
+     * @returns A promise that resolves to an array of entities of type `T`.
+     *          If the label does not exist, an empty array is returned.
+     */
     async all<T extends PersistedEntityBase>(label: string): Promise<Array<T>> {
         const model = this.models.get(label);
         if (model) {
@@ -92,11 +160,25 @@ export class LocalStorageProvider implements IOfflineStorageProvider {
         return [];
     }
 
+    /**
+     * Retrieves all collections stored in the local storage provider.
+     *
+     * @returns {Promise<Map<string, any>>} A promise that resolves to a map containing the collections,
+     * where the keys are collection names and the values are the corresponding data.
+     */
     async getCollections(): Promise<Map<string, any>> {
         return Promise.resolve(this.models);
     }
 
 
+    /**
+     * Adds a new collection to the local storage provider.
+     *
+     * @template T - The type of the persisted entity, extending `PersistedEntityBase`.
+     * @param label - The unique label used to identify the collection.
+     * @param model - The model representing the structure of the collection.
+     * @returns void
+     */
     addCollection<T extends PersistedEntityBase>(label: string, model: any): void {
         this.models.set(label, model);
     }

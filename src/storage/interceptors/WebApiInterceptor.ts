@@ -78,7 +78,7 @@ export class WebApiInterceptor implements IInterceptor {
      * @returns A promise that resolves to an array of items of type `T`.
      */
     async all<T>(collectionName: string): Promise<T[]> {
-        return await this.apiFetch<T[]>(`${collectionName}`, {
+        return this.apiFetch<T[]>(`${collectionName}`, {
             method: 'GET',
         });
     }

@@ -1,7 +1,9 @@
 import {
+  IProviderConfig,
   LocalStorageProvider,
   OfflineStorage,
   QueryableArray,
+  WebApiInterceptor,
 } from '../src/index';
 import { ExtendedDish } from './fake-api/ExtendedDish';
 import { IExtendedDish } from './fake-api/IExtendedDish';
@@ -10,13 +12,22 @@ import {
   IMenu,
 } from './fake-api/MenuModel';
 
+const logger = (data:any) => {
+
+        const p = document.createElement("p");
+        p.textContent = JSON.stringify(data);
+
+        document.querySelector("#output")?.prepend(p);
+
+};
+
 export class TestClint {
     storage!: OfflineStorage;
    
 
     async runCommands() {
 
-        const extendedDishes = await OfflineStorage.fetch<IMenu,IExtendedDish[]>('fake-api/data.json', (result) => {
+        const extendedDishes = await OfflineStorage.fetch<IMenu,IExtendedDish[]>('api/menu/', (result) => {
             const dishes = new QueryableArray(...result.dishes);
             const categories = new QueryableArray(...result.categories);    
             const extendedDishes = dishes.map((dish) => {
@@ -37,19 +48,26 @@ export class TestClint {
         });   
          const collection = await this.storage.getCollection<ExtendedDish>('dishStorage').toArray();
          collection.forEach ( item => {
-                    console.log(item);
+            logger(item);
+                   
          });
     }
     
     constructor() {
 
-        const provider = new LocalStorageProvider();
-        //const provider = new IndexedDBProvider
 
+        const providerConfig:IProviderConfig = {
+            interceptor:new WebApiInterceptor({
+                baseUrl:"/api/"
+            })
+        };
+
+        const provider = new LocalStorageProvider(providerConfig);
+        //const provider = new IndexedDBProvider
 
         this.storage = new OfflineStorage(provider, 'dishStorage');
         this.storage.init().then(async () => {
-            console.log('Storage initialized');
+            logger('Storage initialized');
             await this.runCommands();
         }
         ).catch(async () => {
