@@ -10,38 +10,13 @@ import {
   IMenu,
 } from './fake-api/MenuModel';
 
-export class SyncHelper {
-    static async fetch<T, A>(
-        url: string,
-        transformationFunc: (result: T) => A,
-        options?: RequestInit,
-        timeout = 5000
-    ): Promise<A> {
-        const controller = new AbortController();
-        const id = setTimeout(() => controller.abort(), timeout);
-
-        try {
-            const response = await fetch(url, { ...options, signal: controller.signal });
-            clearTimeout(id);
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            return await transformationFunc(await response.json());
-        } catch (error) {
-            console.error('Fetch error:', error);
-            throw error;
-        }
-    }
-}
 export class TestClint {
     storage!: OfflineStorage;
    
 
     async runCommands() {
 
-        const extendedDishes = await SyncHelper.fetch<IMenu,IExtendedDish[]>('fake-api/data.json', (result) => {
+        const extendedDishes = await OfflineStorage.fetch<IMenu,IExtendedDish[]>('fake-api/data.json', (result) => {
             const dishes = new QueryableArray(...result.dishes);
             const categories = new QueryableArray(...result.categories);    
             const extendedDishes = dishes.map((dish) => {
@@ -60,17 +35,17 @@ export class TestClint {
                 await this.storage.insert('dishStorage', dish);
             }
         });   
-
          const collection = await this.storage.getCollection<ExtendedDish>('dishStorage').toArray();
          collection.forEach ( item => {
                     console.log(item);
          });
-     
     }
+    
     constructor() {
 
         const provider = new LocalStorageProvider();
         //const provider = new IndexedDBProvider
+
 
         this.storage = new OfflineStorage(provider, 'dishStorage');
         this.storage.init().then(async () => {

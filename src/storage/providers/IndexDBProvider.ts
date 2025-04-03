@@ -1,5 +1,6 @@
 import { PersistedEntityBase } from '../entity/PersistedEntityBase';
 import { IOfflineStorageProvider } from '../interface/IOfflineStorageProvider';
+import { IProviderConfig } from '../interface/IProviderConfig';
 
 export class IndexedDBProvider implements IOfflineStorageProvider {
     private dbPromise: Promise<IDBDatabase> | null = null;
@@ -8,6 +9,9 @@ export class IndexedDBProvider implements IOfflineStorageProvider {
 
     constructor(version: number = 1) {
         this.version = version;
+    }
+    ['constructor'](config?: IProviderConfig): IOfflineStorageProvider {
+        throw new Error('Method not implemented.');
     }
     addCollection<T extends PersistedEntityBase>(label: string, collection: any): void {
         throw new Error('No need to add collections to IndexedDB provider');
