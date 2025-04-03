@@ -19,8 +19,9 @@ A lightweight and flexible offline storage library for JavaScript applications.
 ## Installation
 
 
-TBD
-
+```bash 
+npm i jolly-donny
+```
 
 ## Usage
 
