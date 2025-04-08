@@ -394,7 +394,7 @@ export class OfflineStorage {
             return new QueryableArray(...parsedItems);
         } catch (error) {
             console.error(`Error retrieving all items for label ${label}:`, error);
-            return new QueryableArray(); // Or throw an error, depending on your error-handling strategy
+            return new QueryableArray<T>(); // Return an empty QueryableArray instance
         }
     }
 
@@ -406,7 +406,7 @@ export class OfflineStorage {
      * @returns A `QueryableArray` containing the provided entities.
      */
     toQueryableArray<T extends PersistedEntityBase>(items: T[]): QueryableArray<T> {
-        return new QueryableArray<T>(...items);
+        return new QueryableArray(...items);
     }
 
     /**

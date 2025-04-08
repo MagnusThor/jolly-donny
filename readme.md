@@ -18,7 +18,6 @@ A lightweight and flexible offline storage library for JavaScript applications.
 
 ## Installation
 
-
 ```bash 
 npm i jolly-donny
 ```
@@ -29,7 +28,7 @@ npm i jolly-donny
 1. Initialize OfflineStorage
 
  ```typescript
-    import { OfflineStorage, IndexedDBProvider, PersistedEntity } from 'your-package-name';
+    import { OfflineStorage, IndexedDBProvider,LocalStorageProvider, PersistedEntity } from 'your-package-name';
 
     class User extends PersistedEntity<User> {
         constructor(public name: string, public age: number) {

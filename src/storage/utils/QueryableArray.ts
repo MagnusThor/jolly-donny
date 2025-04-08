@@ -198,4 +198,44 @@ export class QueryableArray<T> extends Array<T> {
         const set = new Set(this);
         return new QueryableArray(...set);
     }
+
+    orderByAsc<K>(keySelector: (item: T) => K): QueryableArray<T> {
+        const result = new QueryableArray(...this.sort((a, b) => {
+            const keyA = keySelector(a);
+            const keyB = keySelector(b);
+
+            if (keyA < keyB) return -1;
+            if (keyA > keyB) return 1;
+            return 0;
+        }));
+        return result;
+    }
+
+    /**
+     * Sorts the elements in descending order based on a key.
+     * @template K - The type of the key.
+     * @param keySelector - A function to extract the key for each element.
+     * @returns A new QueryableArray containing the sorted elements.
+     */
+    orderByDesc<K>(keySelector: (item: T) => K): QueryableArray<T> {
+        const result = new QueryableArray(...this.sort((a, b) => {
+            const keyA = keySelector(a);
+            const keyB = keySelector(b);
+
+            if (keyA > keyB) return -1;
+            if (keyA < keyB) return 1;
+            return 0;
+        }));
+        return result;
+    }
+
+    /**
+    * Creates a new QueryableArray instance from an array-like or iterable object.
+    * @template T - The type of the elements in the source array.
+    * @param arrayLike - An array-like or iterable object to convert to a QueryableArray.
+    * @returns A new QueryableArray instance.
+    */
+    static from<T>(arrayLike: ArrayLike<T> | Iterable<T>): QueryableArray<T> {
+        return new QueryableArray<T>(...Array.from(arrayLike));
+    }
 }
