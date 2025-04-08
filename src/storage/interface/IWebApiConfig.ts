@@ -14,4 +14,17 @@ import { IProviderConfig } from './IProviderConfig';
 export interface IWebApiConfig extends IProviderConfig {
     baseUrl: string;
     headers?: Record<string, string>;
+    endPoints?: {
+        update?: IWebAPIEndpointConfig;
+        delete?: IWebAPIEndpointConfig;
+        findById?: IWebAPIEndpointConfig;
+        find?: IWebAPIEndpointConfig;
+        all?: IWebAPIEndpointConfig;
+    };
+}
+
+
+export interface IWebAPIEndpointConfig {
+    url?: string;
+    method?: string;
 }

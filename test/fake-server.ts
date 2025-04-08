@@ -17,7 +17,7 @@ const allItems = fakeData;
 
 router.get('/:collection', async (req: Request, res: Response) => {
     const { collection } = req.params;
-    res.json(allItems || []);
+    res.json(allItems.dishes || []);
 });
 
 router.get('/:collection/:id', (req: Request, res: Response) => {

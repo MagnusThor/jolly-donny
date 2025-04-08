@@ -7,12 +7,12 @@ import { IPersistedEntity } from '../interface/IPersistedEntity ';
  * @implements {IPersistedEntity }
  */
 export class PersistedEntityBase implements IPersistedEntity  {
-    id: string;
+    id: string | number | undefined;
     created: number;
     lastModified: number;
 
-    constructor() {
-        this.id = crypto.randomUUID(); 
+    constructor(id?: string | number) {
+        this.id = id  || crypto.randomUUID(); 
         this.created = Date.now();
         this.lastModified = Date.now();
     }

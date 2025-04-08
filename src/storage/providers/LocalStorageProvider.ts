@@ -1,4 +1,5 @@
 import { PersistedEntityBase } from '../entity/PersistedEntityBase';
+import { IInterceptor } from '../interface/IInterceptor';
 import { IOfflineStorageProvider } from '../interface/IOfflineStorageProvider';
 import { IProviderConfig } from '../interface/IProviderConfig';
 
@@ -44,12 +45,31 @@ export class LocalStorageProvider implements IOfflineStorageProvider {
      * @param config - Optional configuration object implementing the IProviderConfig interface.
      *                 This can be used to customize the behavior of the provider.
      */
-    constructor(config?: IProviderConfig){    
-        console.log("",config);    
+    constructor(config?: IProviderConfig) {
+        this.config = config;
+        console.log('config', config);
     }
+
+    private config?: IProviderConfig;
     private models: Map<string, any> = new Map();
     private storageName!: string;
 
+    private async delegateToInterceptor<T>(
+        method: (interceptor: IInterceptor, label: string, config?: { url?: string; method?: string }, ...args: any[]) => Promise<T>,
+        label: string,
+        config?: { url?: string; method?: string },
+        ...args: any[]
+    ): Promise<T | void> {
+        if (this.hasInterceptor()) {
+            return method(this.config!.interceptor!, label, config, ...args);
+        }
+        return undefined;
+    }
+
+    private hasInterceptor(): boolean {
+        return !!(this.config && this.config.interceptor);
+    }
+        
     /**
      * Initializes the local storage provider with the specified storage name.
      * This method sets the storage name and attempts to deserialize any existing
@@ -61,6 +81,9 @@ export class LocalStorageProvider implements IOfflineStorageProvider {
     async init(storageName: string): Promise<void> {
         this.storageName = storageName;
         await this.deSerialize();
+        if (this.config?.interceptor) {
+            await this.config.interceptor.init(storageName); // Initialize interceptor if present.
+        }
     }
 
     /**
@@ -87,8 +110,20 @@ export class LocalStorageProvider implements IOfflineStorageProvider {
      * @returns A promise that resolves when the update operation is complete.
      */
     async update<T extends PersistedEntityBase>(label: string, item: T): Promise<void> {
-        const model = this.models.get(label);
+     
+        if (this.hasInterceptor()) {
+            await this.delegateToInterceptor(
+                (interceptor, label, config, item) => {
+                    const endpointConfig = this.config?.endPoints?.update;
+                    return interceptor.update<T>(label, item, endpointConfig?.url, endpointConfig?.method);
+                },
+                label,
+                this.config?.endPoints?.update,
+                item
+            );
+        }
         
+        const model = this.models.get(label);        
         if (model) {
             const index = model.collection.findIndex((pre: T) => pre.id === item.id);
             if (index !== -1) {
@@ -111,6 +146,17 @@ export class LocalStorageProvider implements IOfflineStorageProvider {
      * @returns A promise that resolves when the item has been removed and the changes are saved.
      */
     async delete<T extends PersistedEntityBase>(label: string, item: T): Promise<void> {
+        if (this.hasInterceptor()) {
+            await this.delegateToInterceptor(
+                (interceptor, label, config, item) => {
+                    const endpointConfig = this.config?.endPoints?.update;
+                    return interceptor.delete<T>(label, item, endpointConfig?.url, endpointConfig?.method);
+                },
+                label,
+                this.config?.endPoints?.update,
+                item
+            );
+        }
         const model = this.models.get(label);
         if (model) {
             const index = model.collection.findIndex((pre: T) => pre.id === item.id);
@@ -126,13 +172,25 @@ export class LocalStorageProvider implements IOfflineStorageProvider {
      *
      * @template T - The type of the entity, extending `PersistedEntityBase`.
      * @param label - The label identifying the collection to search in.
-     * @param uuid - The unique identifier of the entity to find.
+     * @param id - The unique number of the entity to find.
      * @returns A promise that resolves to the entity of type `T` if found, or `undefined` if not found.
      */
-    async findById<T extends PersistedEntityBase>(label: string, uuid: string): Promise<T | undefined> {
+    async findById<T extends PersistedEntityBase>(label: string, id: string): Promise<T | undefined> {
+        if (this.hasInterceptor()) {
+            await this.delegateToInterceptor(
+                (interceptor, label, config, item) => {
+                    const endpointConfig = this.config?.endPoints?.update;
+                    return interceptor.findById<T>(label, item, endpointConfig?.url, endpointConfig?.method);
+                },
+                label,
+                this.config?.endPoints?.update,
+                id
+            );
+        }
+
         const model = this.models.get(label);
         if (model) {
-            return model.collection.find((pre: T) => pre.id === uuid);
+            return model.collection.find((pre: T) => pre.id === id);
         }
         return undefined;
     }
@@ -185,11 +243,39 @@ export class LocalStorageProvider implements IOfflineStorageProvider {
      *          If the label does not exist, an empty array is returned.
      */
     async all<T extends PersistedEntityBase>(label: string): Promise<Array<T>> {
+        if (this.hasInterceptor()) {
+            return (await this.delegateToInterceptor(
+                (interceptor, label) => interceptor.all<T>(label),
+                label
+            )) || [];
+        }
         const model = this.models.get(label);
         if (model) {
             return model.collection;
         }
         return [];
+    }
+
+    /**
+     * Fetches all persisted entities of a given type associated with the specified label.
+     *
+     * This method first checks if an interceptor is available. If an interceptor exists,
+     * it delegates the fetching operation to the interceptor's `all` method. If no interceptor
+     * is present, it retrieves the entities directly using the `all` method.
+     *
+     * @template T - The type of the persisted entities, extending `PersistedEntityBase`.
+     * @param label - The label associated with the entities to fetch.
+     * @returns A promise that resolves to an array of entities of type `T`. If no entities
+     *          are found, an empty array is returned.
+     */
+    async fetchAll<T extends PersistedEntityBase>(label: string): Promise<Array<T>> {
+        if (this.hasInterceptor()) {
+            return (await this.delegateToInterceptor(
+                (interceptor, label) => interceptor.all<T>(label),
+                label
+            )) || [];
+        }
+        return this.all<T>(label);
     }
 
     /**
@@ -211,14 +297,30 @@ export class LocalStorageProvider implements IOfflineStorageProvider {
      * @param model - The model representing the structure of the collection.
      * @returns void
      */
-    addCollection<T extends PersistedEntityBase>(label: string, model: any): void {
+    addCollection<T extends PersistedEntityBase>(label: string, model: T): void {
         this.models.set(label, model);
     }
 
+    /**
+     * Serializes the current state of the `models` map into a JSON string.
+     * Converts the map entries into an array before serialization to ensure
+     * compatibility with JSON format.
+     *
+     * @returns {string} A JSON string representation of the `models` map.
+     */
     private serialize(): string {
         return JSON.stringify(Array.from(this.models.entries()));
     }
 
+    /**
+     * Deserializes data from localStorage and populates the `models` map.
+     * 
+     * This method retrieves a JSON string from localStorage using the `storageName` property,
+     * parses it, and converts it into a Map object to populate the `models` property.
+     * 
+     * @returns A promise that resolves when the data is successfully deserialized.
+     * @throws An error if no data is found in localStorage or if the data cannot be parsed.
+     */
     private async deSerialize(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             const data = localStorage.getItem(this.storageName);

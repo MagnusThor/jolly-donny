@@ -49,9 +49,12 @@ export class WebApiInterceptor implements IInterceptor {
      * @param item - The item to be updated. It must include a `uuid` property to identify it.
      * @returns A promise that resolves to the updated item of type `T`.
      */
-    async update<T>(collectionName: string, item: T): Promise<T> {
-        return await this.apiFetch<T>(`${collectionName}/${(item as any).uuid}`, {
-            method: 'PUT',
+    async update<T>(collectionName: string, item: T, url?: string, method?: string): Promise<T> {
+        const finalUrl = url ? url : `${collectionName}/${(item as any).id}`;
+        const finalMethod = method ? method : 'PUT';
+
+        return await this.apiFetch<T>(finalUrl, {
+            method: finalMethod,
             body: JSON.stringify(item),
         });
     }
