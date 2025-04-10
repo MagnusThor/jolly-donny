@@ -1,6 +1,6 @@
 import {
-  IndexedDBProvider,
   IProviderConfig,
+  LocalStorageProvider,
   OfflineStorage,
   QueryableArray,
 } from '../src/index';
@@ -117,16 +117,16 @@ export class TestClint {
             // })
         };
 
-        //const provider = new LocalStorageProvider(providerConfig);
-        const provider = new IndexedDBProvider
+        const provider = new LocalStorageProvider(providerConfig);
+        //const provider = new IndexedDBProvider
 
         this.storage = new OfflineStorage(provider, 'menu');
         this.storage.init().then(async () => {
-            logger('Storage initialized');
+            logger('LocalStorage initialized');
             await this.runCommands();
         }
         ).catch(async () => {
-            logger('Storage initialization failed, creating new storage');
+            logger('LocalStorage initialization failed, creating new storage');
             this.storage.addCollection<IExtendedDish>('menu');
             await this.importData();
             await this.runCommands();

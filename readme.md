@@ -8,7 +8,7 @@ A lightweight and flexible offline storage library for JavaScript applications.
 * **CRUD Operations:** Perform standard Create, Read, Update, and Delete operations.
 * **Querying:** Find data using flexible query functions.
 * **Asynchronous Operations:** All operations are asynchronous, ensuring non-blocking execution.
-* **Flexible Storage Providers:** Supports various storage providers (e.g., IndexedDB, LocalStorage).
+* **Flexible Storage Providers:** Supports various storage providers (e.g., IndexedDB, LocalStorage, File System API).
 * **Data Synchronization:** Includes a helper function for easy data synchronization with remote APIs.
     * **Optional Transformation:** The `fetch` method allows for optional data transformations, or simply retrieving raw JSON.
     * **Timeout & Cancellation:** The `fetch` method supports request timeouts and cancellation using `AbortController`.
