@@ -32,19 +32,17 @@ export class FileSystemProvider implements IOfflineStorageProvider {
     }
 
     /**
-     * Asynchronously loads collections from JSON files within the root handle directory.
+     * Loads collections from the file system and populates the `collections` map.
      * 
-     * This method iterates through all entries in the `rootHandle` directory, identifying files
-     * with a `.json` extension. For each JSON file, it reads the file content, parses it into
-     * a JavaScript object, and stores it in the `collections` map using the file name (without
-     * the `.json` extension) as the key.
+     * This method iterates through the entries in the `rootHandle` directory, identifying
+     * files with a `.json` extension. For each valid file, it reads the content, parses it
+     * as JSON, and stores the resulting data in the `collections` map. If a custom parser
+     * is provided in the configuration, it will be used to process the file content; otherwise,
+     * a default parser assumes the JSON contains an array.
      * 
-     * If the file content cannot be parsed as JSON, a warning is logged to the console.
+     * @returns A promise that resolves when all collections have been loaded.
      * 
-     * @returns {Promise<void>} A promise that resolves when all collections have been loaded.
-     * 
-     * @throws {Error} If an error occurs while reading or parsing a file, it will be caught
-     * and logged, but the method will continue processing other files.
+     * @throws Will log a warning to the console if a file cannot be parsed as JSON.
      */
     private async loadCollections(): Promise<void> {
         if (!this.rootHandle) return;
@@ -55,8 +53,18 @@ export class FileSystemProvider implements IOfflineStorageProvider {
                 const content = await file.text();
                 const label = name.replace('.json', '');
                 try {
-                    const data = JSON.parse(content);
-                    this.collections.set(label, data);
+                    const loadedResults = JSON.parse(content);
+                    if (this.config?.parser) {
+                        // Use custom parser from config
+                        const parsedCollections = this.config.parser(content, this, loadedResults);
+                        parsedCollections.forEach((data, collectionLabel) => {
+                            this.collections.set(collectionLabel, data);
+                        });
+                    } else {
+                        // Default parser (assuming JSON contains an array)
+                        console.log(`Loading collection: ${label}`,loadedResults);
+                        this.collections.set(label, loadedResults);
+                    }
                 } catch (err) {
                     console.warn(`Failed to parse ${name}:`, err);
                 }

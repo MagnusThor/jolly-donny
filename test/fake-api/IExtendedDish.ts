@@ -9,8 +9,9 @@ export interface IMenu {
 }
 
 export interface ICategory {
+    id: number | string | undefined; // Changed 'id' to 'number | string | undefined' to match the original type
     uuiid?: string;
-    id: number;
+    categoryId: number; // Renamed 'id' to 'categoryId' to avoid conflict
     name: string;
     uuid: string;
 }
@@ -27,5 +28,11 @@ export interface IDish {
 
 
 export interface IExtendedDish extends IPersistedEntity, IDish {
-    categoryName: string;
+
+    dishCategory: ICategory | undefined;
+}
+
+export interface IExendedCategory extends IPersistedEntity, ICategory {
+
+   
 }

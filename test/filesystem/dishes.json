@@ -1,3 +1,6 @@
+{
+
+  "dishes":
 [
   {
     "category": 121,
@@ -209,7 +212,7 @@
   {
     "category": 41,
     "title": "California maki 10 bitar",
-    "price": 99,
+    "price": 1000,
     "sku": 27,
     "description": "lax, avokado, gurka, krabbstick",
     "uuid": "db16ce63-871a-4236-90a5-a58b442dbd53",
@@ -836,4 +839,85 @@
     "uuid": "cb2d888e-0a33-4b23-90f5-aed9c1e29ac8",
     "showInLimied": false
   }
+],
+"categories": [
+  {
+      "uuiid": "9eb30443-9b77-4766-868e-cf15173ea3e7",
+      "id": 1,
+      "name": "Sushi",
+      "uuid": "dd8f7e3b-13e8-49dc-b5e4-a39da849fdd7"
+  },
+  {
+      "id": 11,
+      "name": "Grillad sushi & Sashimi",
+      "uuid": "3b9a8c63-35db-4f44-8859-de14d77923e4"
+  },
+  {
+      "id": 21,
+      "name": "Vegetariskt & Vegan",
+      "uuid": "beb4b9c5-da2e-49f1-9101-8159f684ded1"
+  },
+  {
+      "id": 31,
+      "name": "Barn meny",
+      "uuid": "55ba36ca-f1d8-43fc-9f68-b11e2c02e073"
+  },
+  {
+      "id": 41,
+      "name": "Makirullar",
+      "uuid": "fa730677-e6f6-4da6-b675-38f21609d797"
+  },
+  {
+      "id": 51,
+      "name": "Friterade makirullar",
+      "uuid": "a40c6664-98df-47e7-94d1-2087d8f5824b"
+  },
+  {
+      "id": 61,
+      "name": "Bowl",
+      "uuid": "5b4204db-d067-4981-ac96-c66e1ceba1eb"
+  },
+  {
+      "id": 71,
+      "name": "Varmrätter",
+      "uuid": "8e0289ca-c798-4fe5-8c1e-37a85e3c762c"
+  },
+  {
+      "id": 81,
+      "name": "Aptitretare ",
+      "uuid": "81af54c7-d4b5-4cf7-99fd-9c76ff7fc051"
+  },
+  {
+      "id": 91,
+      "name": "Såser",
+      "uuid": "3ef01f32-8e5e-4103-8ccc-92910ab142ee"
+  },
+  {
+      "id": 101,
+      "name": "Tillbehör",
+      "uuid": "870c5b31-0728-4796-b2ed-28bce068f1ae"
+  },
+  {
+      "id": 111,
+      "name": "Efterrätter",
+      "uuid": "f163924d-ae52-49f3-b6c0-d69a596d2976"
+  },
+  {
+      "id": 121,
+      "name": "Dryck",
+      "uuid": "108207d9-f1cc-4bd6-8489-d416813a54ee"
+  },
+  {
+      "id": 131,
+      "name": "Sushi Burger",
+      "uuid": "44fadb2d-a9e3-4763-bdc2-8a263550c978"
+  },
+  {
+      "id": 141,
+      "name": "New Item",
+      "uuid": "4d9b42b1-df35-4597-aada-d90f23c04e2e"
+  }
 ]
+
+
+}

@@ -427,4 +427,58 @@ export class OfflineStorage {
             }
         });
     }
+
+    /**
+     * Executes a cross-collection query by iterating through multiple collections
+     * and evaluating a provided query function on combinations of items from these collections.
+     *
+     * @template T - A tuple type representing the combination of items from the collections.
+     * @param collectionLabels - An array of strings representing the labels of the collections to query.
+     * @param query - A function that takes a tuple of items (one from each collection) and returns a boolean
+     * indicating whether the combination satisfies the query condition.
+     * @returns A promise that resolves to an array of tuples, where each tuple contains items from the collections
+     * that satisfy the query condition.
+     * @throws An error if any of the specified collections are not found.
+     */
+    async crossCollectionQuery<T extends any[]>(
+        collectionLabels: string[],  
+        query: (...items: T) => boolean  
+    ): Promise<Array<T>> {
+       
+        const collectionsMap = await this.provider.getCollections();
+        
+   
+        const collections: any[] = [];
+        for (const label of collectionLabels) {
+            const collection = collectionsMap.get(label);
+            if (!collection) {
+                throw new Error(`Collection ${label} not found`);
+            }
+            collections.push(collection);
+        }
+
+ 
+        const results: T[] = [];
+
+     
+        const iterateCollections = (index: number = 0, currentItems: any[] = []) => {
+            if (index === collections.length) {
+         
+                if (query(...currentItems as T)) {
+                    results.push(currentItems as T);
+                }
+                return;
+            }
+
+            for (const item of collections[index]) {
+                iterateCollections(index + 1, [...currentItems, item]);
+            }
+        };
+
+      
+        iterateCollections();
+
+        return results;
+    }
+    
 }

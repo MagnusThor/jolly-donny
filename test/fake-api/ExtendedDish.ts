@@ -1,5 +1,8 @@
 import { PersistedEntity } from '../../src/index';
-import { IExtendedDish } from './IExtendedDish';
+import {
+  ICategory,
+  IExtendedDish,
+} from './IExtendedDish';
 
 export class ExtendedDish extends PersistedEntity<ExtendedDish> implements IExtendedDish {
     created: number;
@@ -10,6 +13,7 @@ export class ExtendedDish extends PersistedEntity<ExtendedDish> implements IExte
         this.lastModified = Date.now();
 
     }
+    dishCategory: ICategory | undefined;
     categoryName!: string;
     category!: number;
     title!: string;
