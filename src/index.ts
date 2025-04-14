@@ -18,5 +18,6 @@ export * from './storage/interface/IInterceptor'
 export * from './storage/interface/IProviderConfig'
 export * from './storage/interface/IWebApiConfig'
 export * from './storage/interceptors/WebApiInterceptor'
+export * from './storage/providers/SQLLiteProvider'
 
 
