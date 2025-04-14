@@ -286,3 +286,48 @@ syncAndStoreDishes();
     exampleFormatters();
 
 ```
+
+8. Using the FileSystemProvider for File-Based Storage
+The FileSystemProvider enables storing and loading collections using the File System Access API (in supported browsers).
+
+
+
+ ```typescript
+import {
+  FileSystemProvider,
+  OfflineStorage,
+  IProviderConfig,
+} from 'jolly-donny';
+import { IMenu } from './types'; // Your data interfaces
+
+// Optional: define a parser to extract collections from a loaded file
+const dishFileParser = (content: string): Map<string, any> => {
+  const parsed: IMenu = JSON.parse(content);
+  const collections = new Map<string, any>();
+  if (Array.isArray(parsed.dishes)) collections.set('dishes', parsed.dishes);
+  if (Array.isArray(parsed.categories)) collections.set('categories', parsed.categories);
+  return collections;
+};
+
+async function useFileSystemProvider() {
+  const providerConfig: IProviderConfig = {
+    parser: dishFileParser,
+  };
+
+  const provider = new FileSystemProvider(providerConfig);
+  const storage = new OfflineStorage(provider, 'menu');
+  await storage.init();
+
+  const dishes = await storage.getCollection('dishes').all();
+  console.log('Loaded dishes from file:', dishes);
+
+  // Modify and save
+  if (dishes.length > 0) {
+    dishes[0].price = 99;
+    await storage.update('dishes', dishes[0]);
+    await storage.save(); // Save back to file
+  }
+}
+ ```
+
+ Note: The File System API is available in Chromium-based browsers like Chrome and Edge. When init() is called, the user will be prompted to select a file.
