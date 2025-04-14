@@ -3,7 +3,9 @@ import {
   PersistedEntityBase,
   QueryableArray,
 } from '../src/index';
-import { SQLiteProvider } from '../src/storage/providers/SQLLiteProvider';
+import {
+  SQLiteJsonProvider,
+} from '../src/storage/providers/SQLiteJsonProvider';
 
 const logger = (...args: any[]) => {
     const p = document.createElement("p");
@@ -23,9 +25,7 @@ export class TestClint {
    
     constructor() {
 
-        const provider = new SQLiteProvider();
-
-        logger("SQLiteProvider", provider);
+        const provider = new SQLiteJsonProvider();
 
          provider.init("testDb").then(async () => {
 
@@ -40,12 +40,12 @@ export class TestClint {
                 await provider.update('notes', newNote);
             };
 
-            logger("Created a bunch of notes");
+            logger("Created a bunch of notes.");
 
             const allNotes = new QueryableArray(...await provider.all<Note>('notes'));
-            const queryResult = allNotes.take(1);//.firstOrDefault;
-        
-            logger("Query Result", queryResult);
+            const queryResult = allNotes.take(1).firstOrDefault();
+
+            logger("Query Result (firstOrDefault) -->", queryResult);
 
          }).catch((error) => {
             console.error("Error initializing SQLite provider:", error);
