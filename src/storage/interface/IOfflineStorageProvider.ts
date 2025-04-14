@@ -39,10 +39,10 @@ export interface IOfflineStorageProvider {
     /**
      * Finds an item in the storage by its unique identifier.
      * @param label - The label or collection name where the item is stored.
-     * @param uuid - The unique identifier of the item to find.
+     * @param id - The unique identifier of the item to find.
      * @returns A promise that resolves with the found item or `undefined` if not found.
      */
-    findById<T extends PersistedEntityBase>(label: string, uuid: string): Promise<T | undefined>;
+    findById<T extends PersistedEntityBase>(label: string, id: string | number): Promise<T | undefined>;
 
     /**
      * Finds items in the storage that match a given query.

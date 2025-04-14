@@ -121,8 +121,7 @@ export class LocalStorageProvider implements IOfflineStorageProvider {
                 this.config?.endPoints?.update,
                 item
             );
-        }
-        
+        }        
         const model = this.models.get(label);        
         if (model) {
             const index = model.collection.findIndex((pre: T) => pre.id === item.id);

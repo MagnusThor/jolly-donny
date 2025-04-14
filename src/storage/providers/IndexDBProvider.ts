@@ -196,6 +196,8 @@ export class IndexedDBProvider implements IOfflineStorageProvider {
         }
     }
 
+    
+
     /**
      * Retrieves all entities of a specified type from the IndexedDB object store.
      *
