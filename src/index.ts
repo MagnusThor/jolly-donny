@@ -9,15 +9,17 @@ export * from './storage/providers/FileSystemProvider'
 export * from './storage/entity/PersistedEntityBase'
 export * from './storage/utils/QueryableArray'
 export * from './storage/OfflineStorage'
-export * from './storage/entity/PersistedEntity';
-export * from './storage/interface/IFormatter';
-export * from './storage/formaters/DefaultFormatter';  
-export * from './storage/entity/PersistedEntityBuilder';
-export * from './storage/interface/IEntityDefinition';
+export * from './storage/entity/PersistedEntity'
+export * from './storage/interface/IFormatter'
+export * from './storage/formaters/DefaultFormatter'  
+export * from './storage/entity/PersistedEntityBuilder'
+export * from './storage/interface/IEntityDefinition'
 export * from './storage/interface/IInterceptor'
 export * from './storage/interface/IProviderConfig'
 export * from './storage/interface/IWebApiConfig'
 export * from './storage/interceptors/WebApiInterceptor'
-export * from './storage/providers/SQLLiteProvider'
+export * from './storage/providers/SQLiteJsonProvider'
+export * from './storage/providers/SQLLiteSchemeProvider'
+export * from './storage/utils/SQLLiteHelpers'
 
 

@@ -7,7 +7,7 @@ import { PersistedEntityBase } from '../entity/PersistedEntityBase';
 import { IOfflineStorageProvider } from '../interface/IOfflineStorageProvider';
 import { IProviderConfig } from '../interface/IProviderConfig';
 
-export class SQLiteProvider implements IOfflineStorageProvider {
+export class SQLiteJsonProvider implements IOfflineStorageProvider {
     private db: Database | undefined;
     private SQL: SqlJsStatic | undefined;
     private collections: Map<string, any[]> = new Map();
@@ -35,13 +35,28 @@ export class SQLiteProvider implements IOfflineStorageProvider {
      * specifies the path to the WebAssembly file required by SQL.js. A new in-memory database is created
      * after the library is loaded.
      */
-    async init(storageName: string): Promise<void> {
+    /**
+     * Initializes the SQLite provider with the specified storage name and optional data.
+     * 
+     * @param storageName - The name of the storage to initialize.
+     * @param data - Optional initial data for the database. Can be an ArrayLike<number>, Buffer, or null.
+     * @returns A promise that resolves when the initialization is complete.
+     */
+    /**
+     * Initializes the SQLiteJsonProvider by setting up the SQL.js library and creating a database instance.
+     *
+     * @param storageName - The name of the storage to be initialized.
+     * @param data - Optional binary data to initialize the database. Can be an ArrayLike<number>, Buffer, or null.
+     *               If provided, it will be used to populate the database; otherwise, a new empty database will be created.
+     * @returns A promise that resolves when the initialization is complete.
+     */
+    async init(storageName: string,data?: ArrayLike<number> | Buffer | null): Promise<void> {
         this.SQL = await initSqlJs({
             locateFile: file => `./js/${file}` // or 'sql-wasm.wasm' if served from same folder
           });
 
         //this.SQL = await initSqlJs({ locateFile: (file: any) => `https://sql.js.org/dist/${file}` });
-        this.db = new this.SQL.Database();
+        this.db = new this.SQL.Database(data);
         this.storageName = storageName;
     }
 
@@ -179,7 +194,7 @@ export class SQLiteProvider implements IOfflineStorageProvider {
      * @returns A promise that resolves when the collection has been added and the table is ensured.
      */
     async addCollection<T extends PersistedEntityBase>(label: string, collection: any): Promise<void> {
-        await this.ensureTable(label);
+        await this.ensureTable(label);        
         this.collections.set(label, collection);
     }
 
