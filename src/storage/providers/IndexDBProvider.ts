@@ -1,6 +1,7 @@
 import { PersistedEntityBase } from '../entity/PersistedEntityBase';
 import { IOfflineStorageProvider } from '../interface/IOfflineStorageProvider';
 import { IProviderConfig } from '../interface/IProviderConfig';
+import { QueryableArray } from '../utils/QueryableArray';
 
 export class IndexedDBProvider implements IOfflineStorageProvider {
     private dbPromise: Promise<IDBDatabase> | null = null;
@@ -172,7 +173,7 @@ export class IndexedDBProvider implements IOfflineStorageProvider {
         label: string,
         query: (item: T) => boolean,
         pickKeys?: K[]
-    ): Promise<Array<Pick<T, K>>> {
+    ): Promise<QueryableArray<Pick<T, K>>> {
         const store = await this.getObjectStore('readonly');
         const allItems: T[] = await new Promise<T[]>((resolve, reject) => {
             const request = store.getAll();
@@ -182,7 +183,7 @@ export class IndexedDBProvider implements IOfflineStorageProvider {
         const filteredItems = allItems.filter(query);
 
         if (pickKeys) {
-            return filteredItems.map((item) => {
+            const pickedItems = filteredItems.map((item) => {
                 const result: Pick<T, K> = {} as Pick<T, K>;
                 pickKeys.forEach((key) => {
                     if (key in item) {
@@ -191,8 +192,9 @@ export class IndexedDBProvider implements IOfflineStorageProvider {
                 });
                 return result;
             });
+            return new QueryableArray<Pick<T, K>>(...pickedItems);
         } else {
-            return filteredItems;
+            return new QueryableArray<Pick<T, K>>(...filteredItems);
         }
     }
 
@@ -206,17 +208,18 @@ export class IndexedDBProvider implements IOfflineStorageProvider {
      * @returns A promise that resolves to an array of entities of type `T`.
      * @throws An error if the retrieval operation fails.
      */
-    async all<T extends PersistedEntityBase>(label: string): Promise<Array<T>> {
+    async all<T extends PersistedEntityBase>(label: string): Promise<QueryableArray<T>> {
         const store = await this.getObjectStore('readonly');
-        return new Promise<Array<T>>((resolve, reject) => {
+        const items = await new Promise<T[]>((resolve, reject) => {
             const request = store.getAll();
             request.onsuccess = () => {
-                resolve(request.result as Array<T>);
+                resolve(request.result as T[]);
             };
             request.onerror = () => {
                 reject(request.error);
             };
         });
+        return new QueryableArray<T>(...items);
     }
 
     /**

@@ -8,7 +8,7 @@ A lightweight and flexible offline storage library for JavaScript applications.
 * **CRUD Operations:** Perform standard Create, Read, Update, and Delete operations.
 * **Querying:** Find data using flexible query functions.
 * **Asynchronous Operations:** All operations are asynchronous, ensuring non-blocking execution.
-* **Flexible Storage Providers:** Supports various storage providers (e.g., IndexedDB, LocalStorage, File System API).
+* **Flexible Storage Providers:** Supports various storage providers (e.g., IndexedDB, LocalStorage, File System API,SQLite).
 * **Data Synchronization:** Includes a helper function for easy data synchronization with remote APIs.
     * **Optional Transformation:** The `fetch` method allows for optional data transformations, or simply retrieving raw JSON.
     * **Timeout & Cancellation:** The `fetch` method supports request timeouts and cancellation using `AbortController`.
@@ -332,15 +332,15 @@ async function useFileSystemProvider() {
 
  Note: The File System API is available in Chromium-based browsers like Chrome and Edge. When init() is called, the user will be prompted to select a file.
 
- 9. Using the SQLLiteSchemeProvider
-This example demonstrates how to use the SQLLiteSchemeProvider for storing and retrieving data in an SQLite database.
+ 9. Using the SQLiteSchemeProvider
+This example demonstrates how to use the SQLiteSchemeProvider for storing and retrieving data in an SQLite database.
 
 ```typescript
 
-import { SQLLiteSchemeProvider } from 'jolly-donny';
+import { SQLiteSchemeProvider } from 'jolly-donny';
 
 // Create a new instance of the SQLiteProvider
-const provider = new SQLLiteSchemeProvider();
+const provider = new SQLiteSchemeProvider();
 
 // Initialize the provider with a storage name
 provider.init('notes-db').then(async () => {

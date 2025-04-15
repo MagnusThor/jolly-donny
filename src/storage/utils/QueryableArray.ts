@@ -9,7 +9,7 @@ export class QueryableArray<T> extends Array<T> {
      * @returns A new QueryableArray containing the remaining elements.
      */
     skip(count: number): QueryableArray<T> {
-        const result = new QueryableArray(...this.slice(count));
+        const result = QueryableArray.from(this.slice(count));
         return result;
     }
 
@@ -19,7 +19,7 @@ export class QueryableArray<T> extends Array<T> {
      * @returns A new QueryableArray containing the taken elements.
      */
     take(count: number): QueryableArray<T> {
-        const result = new QueryableArray(...this.slice(0, count));
+        const result = QueryableArray.from(this.slice(0, count));
         return result;
     }
 
@@ -29,7 +29,7 @@ export class QueryableArray<T> extends Array<T> {
      * @returns A new QueryableArray containing the elements that satisfy the predicate.
      */
     where(predicate: (item: T) => boolean): QueryableArray<T> {
-        const result = new QueryableArray(...this.filter(predicate));
+        const result = QueryableArray.from(this.filter(predicate));
         return result;
     }
 
@@ -40,7 +40,7 @@ export class QueryableArray<T> extends Array<T> {
      * @returns A new QueryableArray containing the transformed elements.
      */
     select<U>(selector: (item: T) => U): QueryableArray<U> {
-        const result = new QueryableArray(...this.map(selector));
+        const result = QueryableArray.from(this.map(selector));
         return result;
     }
 

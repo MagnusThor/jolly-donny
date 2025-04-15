@@ -8,8 +8,8 @@ module.exports = {
   entry: {
     "localstorage-example": "./dist/test/example-LocalStorageProvider.js",
     "filesystem-example": "./dist/test/example-filesystem.js",
-    "sqllite-json": "./dist/test/example-sqllite-json.js",
-    "sqllite-schema": "./dist/test/example-sqllite-schema.js",
+    "sqlite-json": "./dist/test/example-sqlite-json.js",
+    "sqlite-schema": "./dist/test/example-sqlite-schema.js",
   },
   output: {
     path: path.resolve(__dirname, "test/js/"),

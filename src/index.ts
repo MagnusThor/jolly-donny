@@ -19,7 +19,7 @@ export * from './storage/interface/IProviderConfig'
 export * from './storage/interface/IWebApiConfig'
 export * from './storage/interceptors/WebApiInterceptor'
 export * from './storage/providers/SQLiteJsonProvider'
-export * from './storage/providers/SQLLiteSchemeProvider'
-export * from './storage/utils/SQLLiteHelpers'
+export * from './storage/providers/SQLiteSchemeProvider'
+export * from './storage/utils/SQLiteHelpers'
 
 

@@ -1,11 +1,9 @@
 import {
   OfflineStorage,
   PersistedEntityBase,
-  QueryableArray,
-} from '../src/index';
-import {
   SQLiteJsonProvider,
-} from '../src/storage/providers/SQLiteJsonProvider';
+  SQLiteLocalStorage,
+} from '../src/index';
 
 const logger = (...args: any[]) => {
     const p = document.createElement("p");
@@ -27,9 +25,11 @@ export class TestClint {
 
         const provider = new SQLiteJsonProvider();
 
-         provider.init("testDb").then(async () => {
+        const persistedData = SQLiteLocalStorage.load("testDb");
 
-            for(let i=0; i < 10; i++) {
+         provider.init("testDb",persistedData).then(async () => {
+
+            for(let i=0; i < 5; i++) {
                 const newNote: Note = {
                     id: crypto.randomUUID(),
                     title: `New Note ${i}`,
@@ -42,10 +42,28 @@ export class TestClint {
 
             logger("Created a bunch of notes.");
 
-            const allNotes = new QueryableArray(...await provider.all<Note>('notes'));
-            const queryResult = allNotes.take(1).firstOrDefault();
+            const allNotes = await provider.all<Note>('notes');
 
-            logger("Query Result (firstOrDefault) -->", queryResult);
+            console.log("Number of notes", allNotes.length);
+
+            const last = allNotes.take(1).lastOrDefault();
+
+            logger("lastOrDefault -->", last);
+
+            // find first Note using title
+
+            const firstNote = await provider.find<Note>('notes', (note) => note.title === 'New Note 0');
+
+            logger('First Note:', firstNote);
+
+            // export the database for persistance
+
+            const exportedDb =  provider.exportDb();
+
+            SQLiteLocalStorage.save(exportedDb, "testDb");
+
+            
+
 
          }).catch((error) => {
             console.error("Error initializing SQLite provider:", error);
