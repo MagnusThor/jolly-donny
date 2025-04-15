@@ -301,7 +301,7 @@ export class LocalStorageProvider implements IOfflineStorageProvider {
      * @param model - The model representing the structure of the collection.
      * @returns void
      */
-    addCollection<T extends PersistedEntityBase>(label: string, model: T): void {
+    addCollection<T>(label: string, model: T): void {
         this.models.set(label, model);
     }
 

@@ -73,11 +73,17 @@ export interface IOfflineStorageProvider {
     getCollections(): Promise<Map<string, any>>;
 
     /**
-     * Adds a collection to the storage system.
-     * @param label - The label for the collection.
-     * @param collection - The collection of items to add.
-     */
-    addCollection<T extends PersistedEntityBase>(label: string, collection: any): void;
+    * Adds a new collection to the storage system.
+    * 
+    * This method allows you to add a collection of items to the storage, 
+    * where the collection is stored under the specified label.
+    *
+    * @template T - The type of the items in the collection.
+    * @param {string} label - The label or name for the collection being added.
+    * @param {T} collection - The collection of items to be added, where `T` is the type of the items.
+    * @returns {void} - This method doesn't return anything, it simply adds the collection to storage.
+    */
+    addCollection<T>(label: string, collection: T): void;
 
     constructor(config?: IProviderConfig): IOfflineStorageProvider;
 }
