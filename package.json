@@ -1,15 +1,15 @@
 {
   "name": "jolly-donny",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "main": "dist/src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
     "prepare": "npm run build"
   },
-  "author": "",
+  "author": "Magnus Thor",
   "license": "MIT",
-  "description": "",
+  "description": "A TypeScript library for powerful offline data management. Supports pluggable storage providers (LocalStorage, IndexedDB, SQLite via WASM), LINQ-style query API, async CRUD operations, change tracking, and enhanced QueryableArray utilities.",
   "devDependencies": {
     "@types/body-parser": "^1.19.5",
     "@types/cors": "^2.8.17",
