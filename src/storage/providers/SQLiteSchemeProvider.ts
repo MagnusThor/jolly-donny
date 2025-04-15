@@ -6,8 +6,9 @@ import initSqlJs, {
 import { PersistedEntityBase } from '../entity/PersistedEntityBase';
 import { IOfflineStorageProvider } from '../interface/IOfflineStorageProvider';
 import { IProviderConfig } from '../interface/IProviderConfig';
+import { QueryableArray } from '../utils/QueryableArray';
 
-export class SQLLiteSchemeProvider implements IOfflineStorageProvider {
+export class SQLiteSchemeProvider implements IOfflineStorageProvider {
     
     /**
      * Saves the current state or data to the storage provider.
@@ -35,21 +36,24 @@ export class SQLLiteSchemeProvider implements IOfflineStorageProvider {
         label: string,
         query: (item: T) => boolean,
         pickKeys?: K[]
-    ): Promise<Array<Pick<T, K>>> {
+    ): Promise<QueryableArray<Pick<T, K>>> {
         const allItems = await this.all<T>(label);
         const filteredItems = allItems.filter(query);
     
+        let result: Pick<T, K>[];
         if (!pickKeys) {
-            return filteredItems as Array<Pick<T, K>>;
+            result = filteredItems as Array<Pick<T, K>>;
+        } else {
+            result = filteredItems.map((item) => {
+                const picked = {} as Pick<T, K>;
+                for (const key of pickKeys) {
+                    picked[key] = item[key];
+                }
+                return picked;
+            });
         }
-    
-        return filteredItems.map((item) => {
-            const result = {} as Pick<T, K>;
-            for (const key of pickKeys) {
-                result[key] = item[key];
-            }
-            return result;
-        });
+
+        return new QueryableArray(...result);
     }
 
     
@@ -187,13 +191,13 @@ export class SQLLiteSchemeProvider implements IOfflineStorageProvider {
      * @returns A promise that resolves to an array of entities of type `T`.
      * @throws Will throw an error if the database connection is not initialized.
      */
-    async all<T extends PersistedEntityBase>(label: string): Promise<T[]> {
+    async all<T extends PersistedEntityBase>(label: string): Promise<QueryableArray<T>> {
         const stmt = this.db!.prepare(`SELECT * FROM ${label}`);
         const results: T[] = [];
         while (stmt.step()) {
             results.push(stmt.getAsObject() as unknown as T);
         }
-        return results;
+        return new QueryableArray(...results);
     }
 
     /**
@@ -210,5 +214,31 @@ export class SQLLiteSchemeProvider implements IOfflineStorageProvider {
             throw new Error("Item ID is undefined.");
         }
         this.db!.run(`DELETE FROM ${label} WHERE id = ?`, [item.id]);
+    }
+
+     /**
+     * Exports the current state of the database as a Uint8Array.
+     * 
+     * @returns {Uint8Array} The exported database in binary format.
+     * @throws {Error} If the database is not initialized.
+     */
+     exportDb(): Uint8Array {
+        if (!this.db) {
+            throw new Error("Database is not initialized");
+        }
+        return this.db.export();
+    }
+    
+    /**
+     * Imports a database from a Uint8Array and initializes the SQL.js database instance.
+     *
+     * @param data - The Uint8Array containing the database file to be imported.
+     * @throws {Error} If the SQL.js library is not loaded.
+     */
+    importDb(data: Uint8Array): void {
+        if (!this.SQL) {
+            throw new Error("SQL.js not loaded");
+        }
+        this.db = new this.SQL.Database(data);
     }
 }

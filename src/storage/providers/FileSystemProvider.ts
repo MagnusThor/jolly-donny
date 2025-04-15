@@ -1,6 +1,7 @@
 import { PersistedEntityBase } from '../entity/PersistedEntityBase';
 import { IOfflineStorageProvider } from '../interface/IOfflineStorageProvider';
 import { IProviderConfig } from '../interface/IProviderConfig';
+import { QueryableArray } from '../utils/QueryableArray';
 
 export class FileSystemProvider implements IOfflineStorageProvider {
     private rootHandle: FileSystemDirectoryHandle | undefined;
@@ -176,11 +177,24 @@ export class FileSystemProvider implements IOfflineStorageProvider {
         label: string,
         query: (item: T) => boolean,
         pickKeys?: K[]
-    ): Promise<Array<Pick<T, K>>> {
+    ): Promise<QueryableArray<Pick<T, K>>> {
         const collection = this.ensureCollection<T>(label);
-        return collection
+        const result = collection
             .filter(query)
             .map((item: T) => (pickKeys ? this.pick(item, pickKeys) : item)) as Array<Pick<T, K>>;
+        return Object.assign(result, {
+            skip: (count: number) => result.slice(count),
+            take: (count: number) => result.slice(0, count),
+            where: (predicate: (item: Pick<T, K>) => boolean) => result.filter(predicate),
+            select: <U>(mapper: (item: Pick<T, K>) => U) => result.map(mapper),
+            first: () => result[0],
+            firstOrDefault: (defaultValue?: Pick<T, K>) => result[0] ?? defaultValue,
+            last: () => result[result.length - 1],
+            lastOrDefault: (defaultValue?: Pick<T, K>) => result[result.length - 1] ?? defaultValue,
+            count: () => result.length,
+            any: () => result.length > 0,
+            all: (predicate: (item: Pick<T, K>) => boolean) => result.every(predicate),
+        }) as QueryableArray<Pick<T, K>>;
     }
 
     /**
@@ -190,8 +204,21 @@ export class FileSystemProvider implements IOfflineStorageProvider {
      * @param label - The label identifying the collection of entities to retrieve.
      * @returns A promise that resolves to an array of entities of type `T`.
      */
-    async all<T extends PersistedEntityBase>(label: string): Promise<T[]> {
-        return this.ensureCollection<T>(label);
+    async all<T extends PersistedEntityBase>(label: string): Promise<QueryableArray<T>> {
+        const collection = this.ensureCollection<T>(label);
+        return Object.assign(collection, {
+            skip: (count: number) => collection.slice(count),
+            take: (count: number) => collection.slice(0, count),
+            where: (predicate: (item: T) => boolean) => collection.filter(predicate),
+            select: <U>(mapper: (item: T) => U) => collection.map(mapper),
+            first: () => collection[0],
+            firstOrDefault: (defaultValue?: T) => collection[0] ?? defaultValue,
+            last: () => collection[collection.length - 1],
+            lastOrDefault: (defaultValue?: T) => collection[collection.length - 1] ?? defaultValue,
+            count: () => collection.length,
+            any: () => collection.length > 0,
+            all: (predicate: (item: T) => boolean) => collection.every(predicate),
+        }) as QueryableArray<T>;
     }
 
     /**

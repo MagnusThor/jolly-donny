@@ -1,11 +1,9 @@
 import {
-  IOfflineStorageProvider,
   OfflineStorage,
   PersistedEntityBase,
+  SQLiteLocalStorage,
+  SQLiteSchemeProvider,
 } from '../src/index';
-import {
-  SQLLiteSchemeProvider,
-} from '../src/storage/providers/SQLLiteSchemeProvider';
 
 const logger = (...args: any[]) => {
     const p = document.createElement("p");
@@ -28,16 +26,19 @@ export class TestClint {
     storage!: OfflineStorage;
 
     async runTest() {
-        const provider: IOfflineStorageProvider = new SQLLiteSchemeProvider();
-        await provider.init('test_notes');
+
+        const persistedData = SQLiteLocalStorage.load("test_notes");
+        const provider = new SQLiteSchemeProvider();
+        
+        await provider.init("test_notes", persistedData);
 
         // Create sample notes
-        const note1 = new Note('1', 'First Note', 'This is a test note', Date.now());
-        const note2 = new Note('2', 'Second Note', 'Another note here', Date.now());
-
-        // Add notes
-        await provider.update('notes', note1);
-        await provider.update('notes', note2);
+        for(let i = 0; i < 5; i++) {  
+            const note = new Note(crypto.randomUUID(), 'First Note', 'This is a test note', Date.now()); 
+            await provider.update('notes', note); 
+        }
+    
+         
 
         // Fetch all notes
         const allNotes = await provider.all<Note>('notes');
@@ -54,11 +55,13 @@ export class TestClint {
 
 
         // Delete one
-        await provider.delete('notes', note1);
-        const afterDelete = await provider.all<Note>('notes');
-        logger('After Delete:', afterDelete);
+        // await provider.delete('notes', note1);
+        // const afterDelete = await provider.all<Note>('notes');
+        // logger('After Delete:', afterDelete);
 
-
+        
+        SQLiteLocalStorage.save(provider.exportDb(),"test_notes");
+    
         
     }
 

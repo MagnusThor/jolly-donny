@@ -2,6 +2,7 @@ import { PersistedEntityBase } from '../entity/PersistedEntityBase';
 import { IInterceptor } from '../interface/IInterceptor';
 import { IOfflineStorageProvider } from '../interface/IOfflineStorageProvider';
 import { IProviderConfig } from '../interface/IProviderConfig';
+import { QueryableArray } from '../utils/QueryableArray';
 
 /**
  * The `LocalStorageProvider` class implements the `IOfflineStorageProvider` interface
@@ -210,27 +211,30 @@ export class LocalStorageProvider implements IOfflineStorageProvider {
         label: string,
         query: (item: T) => boolean,
         pickKeys?: K[]
-    ): Promise<Array<Pick<T, K>>> {
+    ): Promise<QueryableArray<Pick<T, K>>> {
         const model = this.models.get(label);
         if (!model) {
-            return [];
+            return new QueryableArray<Pick<T, K>>(...[]);
         }
 
         const filteredItems = model.collection.filter(query) as T[];
 
+        let result: Pick<T, K>[];
         if (pickKeys) {
-            return filteredItems.map((item) => {
-                const result: Pick<T, K> = {} as Pick<T, K>;
+            result = filteredItems.map((item) => {
+                const picked: Pick<T, K> = {} as Pick<T, K>;
                 pickKeys.forEach((key) => {
                     if (key in item) {
-                        result[key] = item[key];
+                        picked[key] = item[key];
                     }
                 });
-                return result;
+                return picked;
             });
         } else {
-            return filteredItems;
+            result = filteredItems;
         }
+
+        return new QueryableArray(...result);
     }
 
     /**
@@ -241,18 +245,19 @@ export class LocalStorageProvider implements IOfflineStorageProvider {
      * @returns A promise that resolves to an array of entities of type `T`.
      *          If the label does not exist, an empty array is returned.
      */
-    async all<T extends PersistedEntityBase>(label: string): Promise<Array<T>> {
+    async all<T extends PersistedEntityBase>(label: string): Promise<QueryableArray<T>> {
         if (this.hasInterceptor()) {
-            return (await this.delegateToInterceptor(
+            const result = await this.delegateToInterceptor(
                 (interceptor, label) => interceptor.all<T>(label),
                 label
-            )) || [];
+            );
+            return new QueryableArray<T>(...(result || []));
         }
         const model = this.models.get(label);
         if (model) {
-            return model.collection;
+            return new QueryableArray<T>(...model.collection);
         }
-        return [];
+        return new QueryableArray<T>();
     }
 
     /**

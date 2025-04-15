@@ -6,6 +6,7 @@ import initSqlJs, {
 import { PersistedEntityBase } from '../entity/PersistedEntityBase';
 import { IOfflineStorageProvider } from '../interface/IOfflineStorageProvider';
 import { IProviderConfig } from '../interface/IProviderConfig';
+import { QueryableArray } from '../utils/QueryableArray';
 
 export class SQLiteJsonProvider implements IOfflineStorageProvider {
     private db: Database | undefined;
@@ -129,28 +130,19 @@ export class SQLiteJsonProvider implements IOfflineStorageProvider {
         return undefined;
     }
 
-    /**
-     * Finds and retrieves items from a storage provider based on a specified query and optional keys to pick.
-     *
-     * @template T - The type of the persisted entity.
-     * @template K - The keys of the entity to pick, defaults to all keys of `T`.
-     * 
-     * @param label - The label identifying the collection of items to search.
-     * @param query - A predicate function used to filter items from the collection.
-     * @param pickKeys - An optional array of keys to pick from the filtered items. If not provided, the entire item is returned.
-     * 
-     * @returns A promise that resolves to an array of objects containing only the picked keys (or the entire item if no keys are specified).
-     */
     async find<T extends PersistedEntityBase, K extends keyof T = keyof T>(
         label: string,
         query: (item: T) => boolean,
         pickKeys?: K[]
-    ): Promise<Array<Pick<T, K>>> {
+    ): Promise<QueryableArray<Pick<T, K>>> {
         const allItems = await this.all<T>(label);
-        return allItems
+        const filteredItems = allItems
             .filter(query)
             .map(item => pickKeys ? Object.fromEntries(pickKeys.map(k => [k, item[k]])) as Pick<T, K> : item as Pick<T, K>);
+        
+        return QueryableArray.from(filteredItems);
     }
+    
 
     /**
      * Retrieves all persisted entities of a specified type from the database table corresponding to the given label.
@@ -161,7 +153,7 @@ export class SQLiteJsonProvider implements IOfflineStorageProvider {
      * 
      * @throws Will throw an error if the table does not exist or if there is an issue with the database operation.
      */
-    async all<T extends PersistedEntityBase>(label: string): Promise<Array<T>> {
+    async all<T extends PersistedEntityBase>(label: string): Promise<QueryableArray<T>> {
         await this.ensureTable(label);
         const result: T[] = [];
         const stmt = this.db!.prepare(`SELECT json FROM ${label}`);
@@ -172,7 +164,7 @@ export class SQLiteJsonProvider implements IOfflineStorageProvider {
             }
         }     
         
-        return result;
+        return QueryableArray.from(result);
     }
 
     /**

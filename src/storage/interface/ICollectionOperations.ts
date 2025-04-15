@@ -1,5 +1,7 @@
 import { PersistedEntityBase } from '../entity/PersistedEntityBase';
-import { QueryableArray } from '../utils/QueryableArray';
+import {
+  QueryableArray,
+} from '../utils/QueryableArray'; // Adjust the path as needed
 
 /**
  * Interface representing operations that can be performed on a collection.

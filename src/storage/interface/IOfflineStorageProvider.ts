@@ -1,4 +1,5 @@
 import { PersistedEntityBase } from '../entity/PersistedEntityBase';
+import { QueryableArray } from '../utils/QueryableArray';
 import { IProviderConfig } from './IProviderConfig';
 
 /**
@@ -23,7 +24,7 @@ export interface IOfflineStorageProvider {
     /**
      * Updates an item in the storage.
      * @param label - The label or collection name where the item is stored.
-     * @param item - The item to update, extending the `EntityBase` type.
+     * @param item - The item to update, extending the `PersistedEntityBase` type.
      * @returns A promise that resolves when the update operation is complete.
      */
     update<T extends PersistedEntityBase>(label: string, item: T): Promise<void>;
@@ -31,7 +32,7 @@ export interface IOfflineStorageProvider {
     /**
      * Deletes an item from the storage.
      * @param label - The label or collection name where the item is stored.
-     * @param item - The item to delete, extending the `EntityBase` type.
+     * @param item - The item to delete, extending the `PersistedEntityBase` type.
      * @returns A promise that resolves when the delete operation is complete.
      */
     delete<T extends PersistedEntityBase>(label: string, item: T): Promise<void>;
@@ -50,20 +51,20 @@ export interface IOfflineStorageProvider {
      * @param label - The label or collection name where the items are stored.
      * @param query - A function that evaluates whether an item matches the query.
      * @param pickKeys - An optional array of keys to pick from the matching items.
-     * @returns A promise that resolves with an array of matching items, with picked keys if specified.
+     * @returns A promise that resolves with a `QueryableArray` of matching items.
      */
     find<T extends PersistedEntityBase, K extends keyof T = keyof T>(
         label: string,
         query: (item: T) => boolean,
         pickKeys?: K[]
-    ): Promise<Array<Pick<T, K>>>;
+    ): Promise<QueryableArray<Pick<T, K>>>;
 
     /**
      * Retrieves all items from a specific label or collection in the storage.
      * @param label - The label or collection name to retrieve items from.
-     * @returns A promise that resolves with an array of all items in the specified label.
+     * @returns A promise that resolves with a `QueryableArray` of all items in the specified label.
      */
-     all<T extends PersistedEntityBase>(label: string): Promise<T[]>;
+    all<T extends PersistedEntityBase>(label: string): Promise<QueryableArray<T>>;
 
     /**
      * Retrieves a map of all collections stored in the storage system.
@@ -71,9 +72,12 @@ export interface IOfflineStorageProvider {
      */
     getCollections(): Promise<Map<string, any>>;
 
+    /**
+     * Adds a collection to the storage system.
+     * @param label - The label for the collection.
+     * @param collection - The collection of items to add.
+     */
+    addCollection<T extends PersistedEntityBase>(label: string, collection: any): void;
 
-    addCollection<T extends PersistedEntityBase>(label: string, collection: any): void; 
-
-
-    constructor(config?: IProviderConfig): IOfflineStorageProvider; 
+    constructor(config?: IProviderConfig): IOfflineStorageProvider;
 }
