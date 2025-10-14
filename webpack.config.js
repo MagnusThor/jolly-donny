@@ -1,6 +1,6 @@
 const webpack = require("webpack");
 const path = require("path");
-const CopyWebpackPlugin = require("copy-webpack-plugin");
+
 
 module.exports = {
   mode: "development",
@@ -8,8 +8,6 @@ module.exports = {
   entry: {
     "localstorage-example": "./dist/test/example-LocalStorageProvider.js",
     "filesystem-example": "./dist/test/example-filesystem.js",
-    "sqlite-json": "./dist/test/example-sqlite-json.js",
-    "sqlite-schema": "./dist/test/example-sqlite-schema.js",
   },
   output: {
     path: path.resolve(__dirname, "test/js/"),
@@ -18,34 +16,17 @@ module.exports = {
   },
   resolve: {
     fallback: {
-      fs: false,
-      path: require.resolve("path-browserify"),
-      crypto: require.resolve("crypto-browserify"),
-      stream: require.resolve("stream-browserify"),
-      buffer: require.resolve("buffer/"),
-      util: require.resolve("util/"),
-      vm: require.resolve("vm-browserify")
+
     },
   },
   module: {
     rules: [
       {
-        test: /\.wasm$/,
-        type: "asset/resource", // Ensures .wasm is emitted to output
       },
     ],
   },
   plugins: [
-    new CopyWebpackPlugin({
-      patterns: [
-        {
-          from: path.resolve(__dirname, "node_modules/sql.js/dist/sql-wasm.wasm"),
-          to: path.resolve(__dirname, "test/js/"), // Same as output
-        },
-      ],
-    }),
+   
   ],
-  experiments: {
-    asyncWebAssembly: true,
-  },
+ 
 };

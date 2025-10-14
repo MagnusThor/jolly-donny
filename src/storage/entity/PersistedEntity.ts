@@ -13,7 +13,8 @@ import { PersistedEntityBuilder } from './PersistedEntityBuilder';
  *
  * @extends PersistedEntityBase
  */
-export abstract class PersistedEntity<T extends PersistedEntity<T>> extends PersistedEntityBase  {
+export abstract class PersistedEntity<T extends PersistedEntity<T, TId>, 
+TId extends string | number   = string | number  > extends PersistedEntityBase<TId> {
  
 
     protected entityDefinition?: { formatters: { [key in keyof T]?: IFormatter<T[key]> } };

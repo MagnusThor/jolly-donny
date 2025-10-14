@@ -137,6 +137,7 @@ export class TestClint {
         this.storage = new OfflineStorage(provider, 'menu');
         this.storage.init().then(async () => {
             logger('LocalStorage initialized');
+            
             await this.runCommands();
         }
         ).catch(async () => {

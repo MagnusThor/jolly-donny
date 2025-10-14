@@ -8,12 +8,13 @@ export interface IMenu {
     useLimited: null;
 }
 
-export interface ICategory {
-    id: number | string | undefined; // Changed 'id' to 'number | string | undefined' to match the original type
+export interface ICategory extends IPersistedEntity {
+    id: number | string ; // Changed 'id' to 'number | string | undefined' to match the original type
     uuiid?: string;
     categoryId: number; // Renamed 'id' to 'categoryId' to avoid conflict
     name: string;
     uuid: string;
+    
 }
 
 export interface IDish {
@@ -32,7 +33,7 @@ export interface IExtendedDish extends IPersistedEntity, IDish {
     dishCategory: ICategory | undefined;
 }
 
-export interface IExendedCategory extends IPersistedEntity, ICategory {
+export interface IExendedCategory extends ICategory {
 
-   
+
 }
